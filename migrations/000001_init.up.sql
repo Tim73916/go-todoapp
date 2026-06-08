@@ -1,6 +1,6 @@
 CREATE SCHEMA todoapp;
 
-CREATE TABLE todoapp.user (
+CREATE TABLE todoapp.users (
     id SERIAL PRIMARY KEY,
     version BIGINT NOT NULL DEFAULT 1,
     full_name VARCHAR(100) NOT NULL CHECK (char_length(full_name) BETWEEN 3 and 100),
@@ -26,5 +26,5 @@ CREATE TABLE todoapp.tasks(
         (completed=TRUE AND completed_at IS NOT NULL AND completed_at >= created_at)
     ),
 
-    author_user_id INTEGER NOT NULL REFERENCES todoapp.user(id)
+    author_user_id INTEGER NOT NULL REFERENCES todoapp.users(id)
 );
