@@ -13,6 +13,9 @@ import (
 	core_pgx_pool "github.com/Tim73916/go-todoapp/internal/core/repository/postgres/pool/pgx"
 	core_http_middleware "github.com/Tim73916/go-todoapp/internal/core/transport/http/middleware"
 	core_http_server "github.com/Tim73916/go-todoapp/internal/core/transport/http/server"
+	statsitics_postres_repository "github.com/Tim73916/go-todoapp/internal/features/statistics/repository/postgres"
+	statistics_service "github.com/Tim73916/go-todoapp/internal/features/statistics/service"
+	statistics_transport_http "github.com/Tim73916/go-todoapp/internal/features/statistics/transport/http"
 	tasks_postgres_repository "github.com/Tim73916/go-todoapp/internal/features/tasks/repository"
 	tasks_service "github.com/Tim73916/go-todoapp/internal/features/tasks/service"
 	tasks_transport_http "github.com/Tim73916/go-todoapp/internal/features/tasks/transport/http"
@@ -61,6 +64,11 @@ func main() {
 	tasksService := tasks_service.NewTasksService(tasksRepository)
 	tasksTransportHTTP := tasks_transport_http.NewTasksHTTPHandler(tasksService)
 
+	logger.Debug("initializing feature", zap.String("feature", "statistics"))
+	statsiticsRepository := statsitics_postres_repository.NewStatisticsRepository(pool)
+	statisticsService := statistics_service.NewStatsiticsService(statsiticsRepository)
+	statisticsTransportHTTP := statistics_transport_http.NewStatisticsHTTPHandler(statisticsService)
+
 	logger.Debug("initializing HTTP server")
 	httpServer := core_http_server.NewHTTPServer(
 		core_http_server.NewConfigMust(),
@@ -70,11 +78,12 @@ func main() {
 		core_http_middleware.Trace(),
 		core_http_middleware.Panic(),
 	)
-	apiVersionRouter := core_http_server.NewAPIVersionRouter(core_http_server.ApiVrsion1)
-	apiVersionRouter.RegisterRoutes(usersTransportHTTP.Routes()...)
-	apiVersionRouter.RegisterRoutes(tasksTransportHTTP.Routes()...)
+	apiVersionRouterV1 := core_http_server.NewAPIVersionRouter(core_http_server.ApiVrsion1)
+	apiVersionRouterV1.RegisterRoutes(usersTransportHTTP.Routes()...)
+	apiVersionRouterV1.RegisterRoutes(tasksTransportHTTP.Routes()...)
+	apiVersionRouterV1.RegisterRoutes(statisticsTransportHTTP.Routes()...)
 
-	httpServer.RegisterAPIRouters(apiVersionRouter)
+	httpServer.RegisterAPIRouters(apiVersionRouterV1)
 
 	if err := httpServer.Run(ctx); err != nil {
 		logger.Error("HTTP server run error", zap.Error(err))
