@@ -1,810 +1,1323 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Todo App · Advanced</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ToDoApp</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet" />
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
             font-family: 'Inter', sans-serif;
-            background: #f0f4f9;
-            color: #0b1a33;
-            padding: 30px 24px;
             min-height: 100vh;
+            background: #0a0a0f;
+            background-image:
+                radial-gradient(ellipse at 10% 20%, rgba(99, 102, 241, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 90% 80%, rgba(139, 92, 246, 0.08) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 50%, rgba(0, 0, 0, 0.5) 0%, transparent 100%);
+            color: #fff;
+            padding: 20px;
             display: flex;
             justify-content: center;
+            align-items: center;
         }
+
         .app {
             max-width: 1280px;
             width: 100%;
         }
-        .app-header {
+
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 16px 20px;
-            margin-bottom: 32px;
+            padding: 20px 28px;
+            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            animation: slideDown 0.6s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .app-header h1 {
-            font-weight: 700;
-            font-size: 1.9rem;
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .logo {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
+            font-size: 1.5rem;
+            font-weight: 800;
             letter-spacing: -0.02em;
         }
-        .app-header h1 i {
-            color: #2a7de1;
-            font-size: 2.2rem;
+
+        .logo span:first-of-type {
+            background: linear-gradient(135deg, #818cf8, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
-        .app-header .badge-api {
-            background: #d2def0;
-            padding: 4px 18px;
-            border-radius: 40px;
-            font-size: 0.7rem;
+
+        .logo-icon {
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            color: #ffffff;
+            box-shadow: 0 4px 20px rgba(99, 102, 241, 0.3);
+            transition: transform 0.3s ease;
+        }
+
+        .logo-icon:hover {
+            transform: rotate(-10deg) scale(1.05);
+        }
+
+        .badge {
+            font-size: 0.6rem;
             font-weight: 600;
-            color: #1e3a6b;
-            letter-spacing: 0.03em;
+            background: rgba(99, 102, 241, 0.2);
+            color: #818cf8;
+            padding: 4px 14px;
+            border-radius: 40px;
+            letter-spacing: 0.04em;
+            border: 1px solid rgba(99, 102, 241, 0.1);
         }
+
         .header-actions {
             display: flex;
-            gap: 12px;
-            flex-wrap: wrap;
+            gap: 10px;
         }
+
         .btn {
+            padding: 10px 22px;
             border: none;
-            padding: 8px 20px;
-            border-radius: 60px;
-            font-weight: 500;
+            border-radius: 12px;
+            font-weight: 600;
             font-size: 0.85rem;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            cursor: pointer;
-            transition: 0.15s ease;
-            background: white;
-            color: #1a2f4e;
-            border: 1px solid #d4dfeb;
+            font-family: inherit;
+            position: relative;
+            overflow: hidden;
         }
-        .btn i { font-size: 0.9rem; }
-        .btn-primary { background: #1f5fcf; color: white; border-color: #1f5fcf; }
-        .btn-primary i { color: white; }
-        .btn-primary:hover { background: #1a4fb0; border-color: #1a4fb0; }
-        .btn-success { background: #0f8f5f; color: white; border-color: #0f8f5f; }
-        .btn-success i { color: white; }
-        .btn-success:hover { background: #0b784d; }
-        .btn-outline { background: transparent; border: 1px solid #d4dfeb; }
-        .btn-outline:hover { background: #e8eef5; }
-        .btn-danger { background: #d14545; color: white; border-color: #d14545; }
-        .btn-danger i { color: white; }
-        .btn-danger:hover { background: #b83636; }
-        .btn-sm { padding: 4px 14px; font-size: 0.75rem; gap: 4px; }
-        .btn-icon { padding: 6px 12px; }
+
+        .btn i {
+            font-size: 0.9rem;
+            transition: transform 0.3s ease;
+        }
+
+        .btn:hover i {
+            transform: scale(1.1);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #6366f1, #8b5cf6);
+            color: white;
+            box-shadow: 0 4px 16px rgba(99, 102, 241, 0.3);
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+        }
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-ghost {
+            background: rgba(255, 255, 255, 0.05);
+            color: #94a3b8;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+        }
+        .btn-ghost:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #fff;
+        }
+
+        .btn-ghost:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .btn-sm {
+            padding: 6px 14px;
+            font-size: 0.75rem;
+            border-radius: 8px;
+        }
+
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            padding: 0;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
         .tabs {
             display: flex;
             gap: 4px;
-            background: #e2eaf3;
             padding: 4px;
-            border-radius: 60px;
-            margin-bottom: 28px;
-            flex-wrap: wrap;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 16px;
+            margin-bottom: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            animation: fadeIn 0.6s ease 0.2s both;
         }
-        .tab-btn {
-            padding: 10px 28px;
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .tab {
+            flex: 1;
+            padding: 12px 20px;
             border: none;
-            border-radius: 60px;
+            border-radius: 12px;
             background: transparent;
+            color: #64748b;
             font-weight: 600;
-            font-size: 0.9rem;
-            color: #29456b;
+            font-size: 0.85rem;
             cursor: pointer;
-            transition: 0.15s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            gap: 10px;
+            font-family: inherit;
         }
-        .tab-btn i { font-size: 1rem; }
-        .tab-btn.active {
-            background: white;
-            color: #1a4fb0;
-            box-shadow: 0 4px 12px rgba(0,20,50,0.08);
+
+        .tab i {
+            font-size: 1rem;
+            transition: transform 0.3s ease;
         }
-        .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.5); }
+
+        .tab:hover {
+            color: #e2e8f0;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .tab:hover i {
+            transform: translateY(-2px);
+        }
+
+        .tab.active {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+            box-shadow: 0 0 20px rgba(99, 102, 241, 0.05);
+        }
+
+        .tab-badge {
+            background: rgba(99, 102, 241, 0.15);
+            padding: 2px 10px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            color: #818cf8;
+        }
+
+        .tab.active .tab-badge {
+            background: rgba(99, 102, 241, 0.2);
+        }
+
         .panel {
             display: none;
-            animation: fadeUp 0.2s ease;
+            animation: fadeSlide 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .panel.active { display: block; }
-        @keyframes fadeUp { 0% { opacity:0.4; transform: translateY(6px); } 100% { opacity:1; transform: translateY(0); } }
+        .panel.active {
+            display: block;
+        }
+
+        @keyframes fadeSlide {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .card {
-            background: white;
-            border-radius: 28px;
             padding: 24px 28px;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.03);
-            border: 1px solid #e3ebf5;
-            margin-bottom: 24px;
+            background: rgba(255, 255, 255, 0.02);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
         }
+
+        .card:hover {
+            border-color: rgba(99, 102, 241, 0.08);
+        }
+
         .card-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 12px 16px;
+            gap: 12px;
             margin-bottom: 20px;
         }
+
         .card-header h2 {
+            font-size: 1.1rem;
             font-weight: 600;
-            font-size: 1.3rem;
             display: flex;
             align-items: center;
             gap: 10px;
+            color: #e2e8f0;
         }
-        .card-header h2 i { color: #2a7de1; }
-        .card-header .badge-count {
-            background: #e8eff8;
-            padding: 2px 16px;
+
+        .card-header h2 i {
+            color: #818cf8;
+        }
+
+        .card-badge {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 4px 16px;
             border-radius: 40px;
-            font-weight: 500;
-            font-size: 0.8rem;
-            color: #1a3f6e;
+            font-size: 0.75rem;
+            color: #94a3b8;
+            transition: all 0.3s ease;
         }
-        .filter-bar {
+
+        .filters {
             display: flex;
             flex-wrap: wrap;
             align-items: center;
-            gap: 12px 18px;
-            background: #f5f9ff;
-            padding: 10px 18px;
-            border-radius: 60px;
-            margin-bottom: 18px;
+            gap: 10px;
+            padding: 12px 18px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
         }
-        .filter-bar label {
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #2d4a73;
+
+        .filter-group {
             display: flex;
             align-items: center;
             gap: 6px;
+            padding: 4px 12px 4px 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            transition: all 0.3s ease;
         }
-        .filter-bar input, .filter-bar select {
-            border: 1px solid #d4dfeb;
-            border-radius: 40px;
-            padding: 6px 14px;
+
+        .filter-group:focus-within {
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .filter-group i {
+            color: #64748b;
+            font-size: 0.7rem;
+        }
+
+        .filter-group:focus-within i {
+            color: #818cf8;
+        }
+
+        .filter-group input,
+        .filter-group select {
+            padding: 6px 8px;
+            border: none;
+            background: transparent;
+            color: #e2e8f0;
             font-size: 0.8rem;
-            background: white;
-            max-width: 130px;
+            font-family: inherit;
+            max-width: 90px;
+            outline: none;
         }
-        .filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: #1f5fcf; }
-        .list-container {
-            max-height: 460px;
+
+        .filter-group input::placeholder {
+            color: #475569;
+        }
+
+        .filter-group input[type="number"] {
+            max-width: 70px;
+        }
+
+        .pagination {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-left: auto;
+            padding: 4px 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+            border: 1px solid rgba(255, 255, 255, 0.04);
+        }
+
+        .pagination-info {
+            font-size: 0.7rem;
+            color: #94a3b8;
+            min-width: 100px;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .list {
+            max-height: 480px;
             overflow-y: auto;
             padding-right: 4px;
         }
-        .list-item {
-            background: #fafdff;
-            border-radius: 18px;
+
+        .list::-webkit-scrollbar {
+            width: 4px;
+        }
+        .list::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 10px;
+        }
+        .list::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.06);
+            border-radius: 10px;
+        }
+
+        .item {
             padding: 14px 18px;
-            margin-bottom: 10px;
-            border: 1px solid #eaf1fa;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.04);
+            border-radius: 14px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
-            transition: 0.1s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: itemAppear 0.4s cubic-bezier(0.4, 0, 0.2, 1) both;
         }
-        .list-item:hover { background: #f2f8ff; border-color: #cbddea; }
-        .item-content { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
-        .item-title { font-weight: 600; font-size: 0.95rem; }
-        .item-sub {
-            font-size: 0.8rem;
-            color: #4d6a90;
+
+        .item:nth-child(1) { animation-delay: 0.05s; }
+        .item:nth-child(2) { animation-delay: 0.1s; }
+        .item:nth-child(3) { animation-delay: 0.15s; }
+        .item:nth-child(4) { animation-delay: 0.2s; }
+        .item:nth-child(5) { animation-delay: 0.25s; }
+        .item:nth-child(6) { animation-delay: 0.3s; }
+        .item:nth-child(7) { animation-delay: 0.35s; }
+        .item:nth-child(8) { animation-delay: 0.4s; }
+        .item:nth-child(9) { animation-delay: 0.45s; }
+        .item:nth-child(10) { animation-delay: 0.5s; }
+
+        @keyframes itemAppear {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .item:hover {
+            background: rgba(255, 255, 255, 0.04);
+            border-color: rgba(99, 102, 241, 0.1);
+            transform: translateX(4px);
+        }
+
+        .item-content {
+            flex: 1;
+            min-width: 140px;
+        }
+
+        .item-title {
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: #e2e8f0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .item-meta {
+            font-size: 0.75rem;
+            color: #64748b;
             display: flex;
             flex-wrap: wrap;
-            gap: 10px 18px;
+            gap: 6px 14px;
+            margin-top: 4px;
         }
-        .item-sub i { width: 16px; margin-right: 4px; }
-        .item-actions { display: flex; gap: 6px; flex-wrap: wrap; }
-        .empty-state { color: #8aa1c0; padding: 32px 0; text-align: center; font-size: 0.95rem; }
+
+        .item-meta i {
+            width: 14px;
+            margin-right: 4px;
+        }
+
+        .item-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .item-actions .btn {
+            opacity: 0.6;
+            transition: all 0.3s ease;
+        }
+
+        .item:hover .item-actions .btn {
+            opacity: 1;
+        }
+
         .pill {
-            background: #e1edfc;
-            color: #1a4fb0;
-            padding: 2px 14px;
+            padding: 2px 12px;
             border-radius: 40px;
-            font-size: 0.7rem;
+            font-size: 0.65rem;
             font-weight: 600;
+            display: inline-block;
         }
-        .pill-success { background: #d4f0e6; color: #0b6d47; }
-        .stat-grid {
+        .pill-purple {
+            background: rgba(99, 102, 241, 0.15);
+            color: #818cf8;
+        }
+        .pill-green {
+            background: rgba(16, 185, 129, 0.15);
+            color: #34d399;
+        }
+        .pill-gray {
+            background: rgba(255, 255, 255, 0.04);
+            color: #64748b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 50px 0;
+            color: #475569;
+        }
+        .empty i {
+            font-size: 3rem;
+            display: block;
+            margin-bottom: 14px;
+            opacity: 0.2;
+        }
+        .empty p {
+            font-size: 0.9rem;
+        }
+
+        .stats {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
             gap: 16px;
-            background: #f6faff;
-            border-radius: 24px;
-            padding: 18px 22px;
         }
-        .stat-item .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: #4d6a90; }
-        .stat-item .stat-value { font-weight: 700; font-size: 1.8rem; color: #0b1a33; }
-        .stat-item .stat-value small { font-weight: 400; font-size: 1rem; color: #6a88ae; margin-left: 4px; }
+
+        .stat {
+            text-align: center;
+            padding: 20px 16px;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 14px;
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover {
+            transform: translateY(-4px);
+            border-color: rgba(99, 102, 241, 0.1);
+        }
+
+        .stat-label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #64748b;
+        }
+
+        .stat-value {
+            font-weight: 700;
+            font-size: 2rem;
+            color: #e2e8f0;
+            margin-top: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .stat:hover .stat-value {
+            color: #818cf8;
+        }
+
+        .stat-value small {
+            font-weight: 400;
+            font-size: 1rem;
+            color: #64748b;
+        }
+
         .modal-overlay {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(10,25,50,0.5);
-            backdrop-filter: blur(6px);
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(16px);
             align-items: center;
             justify-content: center;
             z-index: 1000;
+            animation: fadeIn 0.3s ease;
         }
-        .modal-overlay.active { display: flex; }
+        .modal-overlay.active {
+            display: flex;
+        }
+
         .modal {
-            background: white;
-            border-radius: 36px;
-            padding: 32px 36px;
             width: 100%;
-            max-width: 480px;
-            box-shadow: 0 40px 80px rgba(0,0,0,0.2);
-            max-height: 90vh;
-            overflow-y: auto;
+            max-width: 440px;
+            padding: 32px 36px;
+            background: rgba(20, 20, 30, 0.95);
+            backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 24px;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+            animation: slideUp 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        .modal h3 { font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
-        .modal label { font-weight: 500; font-size: 0.8rem; color: #1e3d62; display: block; margin: 14px 0 4px; }
-        .modal input, .modal textarea, .modal select {
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal h3 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #e2e8f0;
+        }
+        .modal h3 i {
+            color: #818cf8;
+        }
+
+        .modal label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #94a3b8;
+            display: block;
+            margin: 14px 0 4px;
+        }
+
+        .modal input,
+        .modal textarea,
+        .modal select {
             width: 100%;
             padding: 10px 16px;
-            border: 1px solid #d4dfeb;
-            border-radius: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(255, 255, 255, 0.03);
+            color: #e2e8f0;
             font-size: 0.9rem;
-            background: white;
+            font-family: inherit;
+            transition: all 0.3s ease;
         }
-        .modal input:focus, .modal textarea:focus { outline: none; border-color: #1f5fcf; }
-        .modal textarea { min-height: 70px; resize: vertical; }
-        .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
-        .btn-close-modal { background: #e8eef5; border: none; padding: 10px 28px; border-radius: 60px; font-weight: 500; cursor: pointer; }
-        .flex { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-        .gap-8 { gap: 8px; }
-        .mt-16 { margin-top: 16px; }
-        .text-muted { color: #6a88ae; font-size: 0.8rem; }
+
+        .modal input:focus,
+        .modal textarea:focus {
+            outline: none;
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .modal textarea {
+            min-height: 70px;
+            resize: vertical;
+        }
+
+        .modal-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .btn-ghost-dark {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+            color: #94a3b8;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+        .btn-ghost-dark:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #e2e8f0;
+        }
+
         .toast {
             position: fixed;
             bottom: 30px;
             right: 30px;
-            background: #0b1a33;
-            color: white;
             padding: 14px 28px;
-            border-radius: 60px;
+            border-radius: 14px;
             font-weight: 500;
-            font-size: 0.9rem;
-            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            font-size: 0.85rem;
+            background: rgba(20, 20, 30, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            color: #e2e8f0;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.4);
             z-index: 2000;
             opacity: 0;
-            transform: translateY(20px);
-            transition: 0.3s ease;
+            transform: translateY(20px) scale(0.95);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             pointer-events: none;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
-        .toast.show { opacity: 1; transform: translateY(0); }
-        .toast.success { background: #0f8f5f; }
-        .toast.error { background: #d14545; }
-        @media (max-width: 700px) {
-            .app-header { flex-direction: column; align-items: start; }
-            .tabs { width: 100%; border-radius: 40px; }
-            .tab-btn { flex: 1; justify-content: center; padding: 8px 12px; font-size: 0.8rem; }
-            .card { padding: 18px 16px; }
-            .filter-bar { border-radius: 30px; }
-            .modal { padding: 24px 20px; }
+        .toast.show {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+        }
+        .toast.success { border-color: rgba(16, 185, 129, 0.2); }
+        .toast.success i { color: #34d399; }
+        .toast.error { border-color: rgba(239, 68, 68, 0.2); }
+        .toast.error i { color: #f87171; }
+        .toast.info { border-color: rgba(99, 102, 241, 0.2); }
+        .toast.info i { color: #818cf8; }
+
+        @media (max-width: 768px) {
+            body { padding: 12px; }
+            .header { flex-direction: column; align-items: stretch; gap: 14px; padding: 16px 20px; }
+            .header-actions { flex-wrap: wrap; }
+            .header-actions .btn { flex: 1; justify-content: center; }
+            .tabs { flex-wrap: wrap; border-radius: 12px; }
+            .tab { flex: 1; min-width: 80px; padding: 10px 14px; font-size: 0.8rem; }
+            .card { padding: 16px 18px; }
+            .filters { flex-direction: column; align-items: stretch; }
+            .filter-group { max-width: 100%; }
+            .filter-group input, .filter-group select { max-width: 100%; flex: 1; }
+            .pagination { margin-left: 0; justify-content: center; }
+            .stats { grid-template-columns: 1fr 1fr; }
+            .modal { margin: 16px; padding: 24px; }
+        }
+
+        @media (max-width: 480px) {
+            .stats { grid-template-columns: 1fr; }
+            .tab span { display: none; }
+            .tab i { font-size: 1.2rem; }
+            .header-actions .btn span { display: none; }
+            .item { flex-direction: column; align-items: stretch; }
+            .item-actions { justify-content: flex-end; }
+            .pagination-info { min-width: 70px; font-size: 0.65rem; }
         }
     </style>
 </head>
 <body>
-<div class="app">
-    <div class="app-header">
-        <h1><i class="fas fa-check-circle"></i> Todo Manager <span class="badge-api">API v1</span></h1>
-        <div class="header-actions">
-            <button class="btn btn-success" id="globalCreateTask"><i class="fas fa-plus"></i> New Task</button>
-            <button class="btn btn-primary" id="globalCreateUser"><i class="fas fa-user-plus"></i> New User</button>
-            <button class="btn btn-outline" id="refreshAll"><i class="fas fa-sync-alt"></i> Refresh</button>
-        </div>
-    </div>
 
-    <div class="tabs">
-        <button class="tab-btn active" data-tab="tasks"><i class="fas fa-tasks"></i> Tasks</button>
-        <button class="tab-btn" data-tab="users"><i class="fas fa-users"></i> Users</button>
-        <button class="tab-btn" data-tab="stats"><i class="fas fa-chart-pie"></i> Statistics</button>
-    </div>
+    <div class="app">
+        <!-- HEADER -->
+        <header class="header">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-bolt"></i></div>
+                <span>TodoApp</span>
+                <span class="badge">v1</span>
+            </div>
+            <div class="header-actions">
+                <button class="btn btn-primary" id="btnCreateTask">
+                    <i class="fas fa-plus"></i> <span>Задача</span>
+                </button>
+                <button class="btn btn-success" id="btnCreateUser">
+                    <i class="fas fa-user-plus"></i> <span>Пользователь</span>
+                </button>
+                <button class="btn btn-ghost btn-icon" id="btnRefresh" title="Обновить (Ctrl+R)">
+                    <i class="fas fa-sync-alt"></i>
+                </button>
+            </div>
+        </header>
 
-    <div id="panel-tasks" class="panel active">
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-list-check"></i> Tasks</h2>
-                <span class="badge-count" id="taskCount">0</span>
-            </div>
-            <div class="filter-bar">
-                <label><i class="fas fa-user"></i> user_id <input type="number" id="filterUserId" placeholder="any" value=""></label>
-                <label><i class="fas fa-sort-amount-down"></i> limit <input type="number" id="filterLimit" value="10"></label>
-                <label><i class="fas fa-arrow-right"></i> offset <input type="number" id="filterOffset" value="0"></label>
-                <button class="btn btn-sm btn-outline" id="applyTaskFilter"><i class="fas fa-filter"></i> Apply</button>
-                <button class="btn btn-sm btn-outline" id="refreshTasksBtn"><i class="fas fa-rotate-right"></i></button>
-            </div>
-            <div class="list-container" id="taskList"><div class="empty-state"><i class="fas fa-inbox"></i> No tasks</div></div>
-        </div>
-    </div>
+        <!-- TABS -->
+        <nav class="tabs">
+            <button class="tab active" data-tab="tasks">
+                <i class="fas fa-tasks"></i>
+                <span>Задачи</span>
+                <span class="tab-badge" id="badgeTasks">0</span>
+            </button>
+            <button class="tab" data-tab="users">
+                <i class="fas fa-users"></i>
+                <span>Пользователи</span>
+                <span class="tab-badge" id="badgeUsers">0</span>
+            </button>
+            <button class="tab" data-tab="stats">
+                <i class="fas fa-chart-pie"></i>
+                <span>Статистика</span>
+            </button>
+        </nav>
 
-    <div id="panel-users" class="panel">
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-user-group"></i> Users</h2>
-                <span class="badge-count" id="userCount">0</span>
-            </div>
-            <div class="filter-bar">
-                <label><i class="fas fa-sort-amount-down"></i> limit <input type="number" id="userLimit" value="10"></label>
-                <label><i class="fas fa-arrow-right"></i> offset <input type="number" id="userOffset" value="0"></label>
-                <button class="btn btn-sm btn-outline" id="applyUserFilter"><i class="fas fa-filter"></i> Apply</button>
-                <button class="btn btn-sm btn-outline" id="refreshUsersBtn"><i class="fas fa-rotate-right"></i></button>
-            </div>
-            <div class="list-container" id="userList"><div class="empty-state"><i class="fas fa-user-slash"></i> No users</div></div>
-        </div>
-    </div>
-
-    <div id="panel-stats" class="panel">
-        <div class="card">
-            <div class="card-header">
-                <h2><i class="fas fa-chart-simple"></i> Statistics</h2>
-                <div class="flex gap-8">
-                    <input type="date" id="statFrom" style="padding:6px 14px; border-radius:40px; border:1px solid #d4dfeb;">
-                    <input type="date" id="statTo" style="padding:6px 14px; border-radius:40px; border:1px solid #d4dfeb;">
-                    <button class="btn btn-sm btn-outline" id="applyStatFilter"><i class="fas fa-calendar"></i> Filter</button>
-                    <button class="btn btn-sm btn-outline" id="refreshStatsBtn"><i class="fas fa-rotate-right"></i></button>
+       
+        <section id="panel-tasks" class="panel active">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-list-ul"></i> Все задачи</h2>
+                    <span class="card-badge" id="countTasks">0</span>
+                </div>
+                <div class="filters">
+                    <div class="filter-group">
+                        <i class="fas fa-user"></i>
+                        <input type="number" id="filterUserId" placeholder="ID автора" />
+                    </div>
+                    <div class="filter-group">
+                        <i class="fas fa-grip-lines"></i>
+                        <select id="taskLimit">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" id="btnApplyTaskFilter">
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-sm" id="btnRefreshTasks">
+                        <i class="fas fa-rotate-right"></i>
+                    </button>
+                    <div class="pagination">
+                        <button class="btn btn-ghost btn-sm" id="btnTaskPrev" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="pagination-info" id="taskPaginationInfo">Страница 1 из 0</span>
+                        <button class="btn btn-ghost btn-sm" id="btnTaskNext">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="list" id="taskList">
+                    <div class="empty"><i class="fas fa-inbox"></i><p>Нет задач</p></div>
                 </div>
             </div>
-            <div class="stat-grid" id="statisticsDisplay">
-                <div class="stat-item"><span class="stat-label">Tasks created</span><div class="stat-value" id="statCreated">—</div></div>
-                <div class="stat-item"><span class="stat-label">Completed</span><div class="stat-value" id="statCompleted">—</div></div>
-                <div class="stat-item"><span class="stat-label">Completion rate</span><div class="stat-value" id="statRate">—<small>%</small></div></div>
-                <div class="stat-item"><span class="stat-label">Avg completion time</span><div class="stat-value" id="statAvgTime">—</div></div>
+        </section>
+
+      
+        <section id="panel-users" class="panel">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-user-group"></i> Все пользователи</h2>
+                    <span class="card-badge" id="countUsers">0</span>
+                </div>
+                <div class="filters">
+                    <div class="filter-group">
+                        <i class="fas fa-grip-lines"></i>
+                        <select id="userLimit">
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="50">50</option>
+                        </select>
+                    </div>
+                    <button class="btn btn-ghost btn-sm" id="btnApplyUserFilter">
+                        <i class="fas fa-sliders-h"></i>
+                    </button>
+                    <button class="btn btn-ghost btn-sm" id="btnRefreshUsers">
+                        <i class="fas fa-rotate-right"></i>
+                    </button>
+                    <div class="pagination">
+                        <button class="btn btn-ghost btn-sm" id="btnUserPrev" disabled>
+                            <i class="fas fa-chevron-left"></i>
+                        </button>
+                        <span class="pagination-info" id="userPaginationInfo">Страница 1 из 0</span>
+                        <button class="btn btn-ghost btn-sm" id="btnUserNext">
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="list" id="userList">
+                    <div class="empty"><i class="fas fa-user-slash"></i><p>Нет пользователей</p></div>
+                </div>
             </div>
-            <div class="mt-16 text-muted"><i class="fas fa-info-circle"></i> Statistics reflect tasks across all users. Use date filters to narrow period.</div>
-        </div>
-        <div class="card" style="background: #f7fbff;">
-            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
-                <span><i class="fas fa-database"></i> <strong>Total tasks:</strong> <span id="totalTasksStat">0</span></span>
-                <span><i class="fas fa-user"></i> <strong>Total users:</strong> <span id="totalUsersStat">0</span></span>
-                <span><i class="fas fa-check-circle"></i> <strong>Completion rate (global):</strong> <span id="globalRateStat">0%</span></span>
+        </section>
+
+        
+        <section id="panel-stats" class="panel">
+            <div class="card">
+                <div class="card-header">
+                    <h2><i class="fas fa-chart-simple"></i> Статистика</h2>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+                        <input type="date" id="statFrom" style="padding:6px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);color:#e2e8f0;" />
+                        <input type="date" id="statTo" style="padding:6px 14px;border-radius:10px;border:1px solid rgba(255,255,255,0.06);background:rgba(255,255,255,0.03);color:#e2e8f0;" />
+                        <button class="btn btn-ghost btn-sm" id="btnApplyStats"><i class="fas fa-calendar"></i></button>
+                        <button class="btn btn-ghost btn-sm" id="btnRefreshStats"><i class="fas fa-rotate-right"></i></button>
+                    </div>
+                </div>
+                <div class="stats" id="statsDisplay">
+                    <div class="stat"><div class="stat-label">Создано</div><div class="stat-value" id="statCreated">—</div></div>
+                    <div class="stat"><div class="stat-label">Выполнено</div><div class="stat-value" id="statCompleted">—</div></div>
+                    <div class="stat"><div class="stat-label">Прогресс</div><div class="stat-value" id="statRate">—<small>%</small></div></div>
+                    <div class="stat"><div class="stat-label">Среднее время</div><div class="stat-value" id="statAvgTime" style="font-size:1.2rem;">—</div></div>
+                </div>
+                <div style="margin-top:16px;font-size:0.75rem;color:#475569;">
+                    <i class="fas fa-info-circle"></i> Данные за выбранный период
+                </div>
             </div>
-        </div>
+        </section>
     </div>
 
+  
     <div class="modal-overlay" id="modalOverlay">
-        <div class="modal" id="modalContent">
-            <h3 id="modalTitle"><i class="fas fa-pen"></i> New Task</h3>
+        <div class="modal">
+            <h3 id="modalTitle"><i class="fas fa-pen"></i> Новая задача</h3>
             <form id="modalForm">
                 <div id="modalBody"></div>
                 <div class="modal-actions">
-                    <button type="button" class="btn-close-modal" id="modalCancel">Cancel</button>
-                    <button type="submit" class="btn btn-primary" id="modalSubmit"><i class="fas fa-save"></i> Save</button>
+                    <button type="button" class="btn-ghost-dark" id="btnModalCancel">Отмена</button>
+                    <button type="submit" class="btn btn-primary" id="btnModalSubmit"><i class="fas fa-save"></i> Сохранить</button>
                 </div>
             </form>
         </div>
     </div>
 
+    
     <div id="toast" class="toast"></div>
-</div>
 
-<script>
-    (function() {
-        const API_BASE = 'http://127.0.0.1:5050/api/v1';
+    <script>
+       
+        const API = {
+            base: '/api/v1',
 
-        function apiUrl(path, params = {}) {
-            const url = new URL(API_BASE + path);
-            Object.keys(params).forEach(k => {
-                if (params[k] !== undefined && params[k] !== '' && params[k] !== null) url.searchParams.append(k, params[k]);
-            });
-            return url.toString();
-        }
+            async request(endpoint, opts = {}) {
+                const url = this.base + endpoint;
+                const res = await fetch(url, {
+                    headers: { 'Content-Type': 'application/json' },
+                    ...opts,
+                });
+                if (!res.ok) {
+                    let msg = `${res.status} ${res.statusText}`;
+                    try { const d = await res.json();
+                        msg = d.message || d.error || msg; } catch (_) {}
+                    throw new Error(msg);
+                }
+                if (res.status === 204) return null;
+                return res.json();
+            },
 
-        async function fetchJson(url, opts = {}) {
-            const res = await fetch(url, {
-                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
-                ...opts,
-            });
-            if (!res.ok) {
-                let errMsg = `${res.status} ${res.statusText}`;
-                try {
-                    const data = await res.json();
-                    errMsg = data.message || data.error || errMsg;
-                } catch (_) {}
-                throw new Error(errMsg);
+            qs(params) {
+                const q = new URLSearchParams();
+                Object.keys(params).forEach(k => {
+                    if (params[k] !== undefined && params[k] !== '' && params[k] !== null)
+                        q.append(k, params[k]);
+                });
+                return q.toString();
+            },
+
+            getTasks(userId, limit = 10, offset = 0) {
+                const q = this.qs({ user_id: userId, limit, offset });
+                return this.request(`/tasks${q ? '?' + q : ''}`);
+            },
+            createTask(data) { return this.request('/tasks', { method: 'POST', body: JSON.stringify(data) }); },
+            updateTask(id, data) { return this.request(`/tasks/${id}`, { method: 'PATCH', body: JSON.stringify(data) }); },
+            deleteTask(id) { return this.request(`/tasks/${id}`, { method: 'DELETE' }); },
+
+            getUsers(limit = 10, offset = 0) {
+                const q = this.qs({ limit, offset });
+                return this.request(`/users${q ? '?' + q : ''}`);
+            },
+            createUser(data) { return this.request('/users', { method: 'POST', body: JSON.stringify(data) }); },
+            updateUser(id, data) { return this.request(`/users/${id}`, { method: 'PATCH', body: JSON.stringify(data) }); },
+            deleteUser(id) { return this.request(`/users/${id}`, { method: 'DELETE' }); },
+
+            getStats(from, to) {
+                const q = this.qs({ from, to });
+                return this.request(`/statistics${q ? '?' + q : ''}`);
             }
-            if (res.status === 204) return null;
-            return res.json();
-        }
+        };
 
-        function formatDate(d) { if (!d) return '—'; return new Date(d).toLocaleString(); }
         
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = 'toast ' + type;
-            setTimeout(() => toast.classList.add('show'), 10);
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
+        const App = {
+            tasks: [],
+            users: [],
 
-        let tasks = [];
-        let users = [];
+            taskPage: 1,
+            taskLimit: 10,
+            taskTotal: 0,
 
-        function renderTasks() {
-            const container = document.getElementById('taskList');
-            document.getElementById('taskCount').textContent = tasks.length;
-            if (!tasks.length) {
-                container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i> No tasks — create one!</div>`;
-                return;
-            }
-            container.innerHTML = tasks.map(t => `
-                <div class="list-item">
-                    <div class="item-content">
-                        <div class="item-title">${t.title || 'untitled'} ${t.completed ? '<span class="pill pill-success">done</span>' : '<span class="pill">open</span>'}</div>
-                        <div class="item-sub">
-                            <span><i class="fas fa-user"></i> user ${t.author_user_id}</span>
-                            ${t.description ? `<span><i class="fas fa-align-left"></i> ${t.description.substring(0, 50)}${t.description.length>50?'…':''}</span>` : ''}
-                            <span><i class="far fa-calendar-alt"></i> ${formatDate(t.created_at)}</span>
-                            ${t.completed_at ? `<span><i class="fas fa-check"></i> ${formatDate(t.completed_at)}</span>` : ''}
-                            <span>v${t.version}</span>
+            userPage: 1,
+            userLimit: 10,
+            userTotal: 0,
+
+            $: id => document.getElementById(id),
+            $$: sel => document.querySelectorAll(sel),
+
+            toast(msg, type = 'success') {
+                const el = this.$('toast');
+                const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' :
+                'fa-info-circle';
+                el.innerHTML = `<i class="fas ${icon}"></i> ${msg}`;
+                el.className = `toast ${type}`;
+                requestAnimationFrame(() => el.classList.add('show'));
+                clearTimeout(this._toastTimer);
+                this._toastTimer = setTimeout(() => el.classList.remove('show'), 3000);
+            },
+
+            async fetchTasks() {
+                try {
+                    const uid = this.$('filterUserId')?.value || '';
+                    const limit = parseInt(this.$('taskLimit')?.value) || 10;
+                    const offset = (this.taskPage - 1) * limit;
+                    this.taskLimit = limit;
+                    const data = await API.getTasks(uid || null, limit, offset);
+                    this.tasks = data || [];
+                    this.taskTotal = this.tasks.length < limit ? offset + this.tasks.length : offset + limit + 1;
+                    this.renderTasks();
+                    this.updatePagination('task');
+                } catch (e) { this.toast(e.message, 'error'); }
+            },
+
+            async fetchUsers() {
+                try {
+                    const limit = parseInt(this.$('userLimit')?.value) || 10;
+                    const offset = (this.userPage - 1) * limit;
+                    this.userLimit = limit;
+                    const data = await API.getUsers(limit, offset);
+                    this.users = data || [];
+                    this.userTotal = this.users.length < limit ? offset + this.users.length : offset + limit + 1;
+                    this.renderUsers();
+                    this.updatePagination('user');
+                } catch (e) { this.toast(e.message, 'error'); }
+            },
+
+            async fetchStats(from, to) {
+                try {
+                    const s = await API.getStats(from, to);
+                    this.$('statCreated').textContent = s.tasks_created ?? '—';
+                    this.$('statCompleted').textContent = s.tasks_completed ?? '—';
+                    this.$('statRate').innerHTML = (s.tasks_completeed_rate ?? '—') + '<small>%</small>';
+                    this.$('statAvgTime').textContent = s.tasks_average_completion_time || '—';
+                } catch (e) { this.toast(e.message, 'error'); }
+            },
+
+            renderTasks() {
+                const list = this.$('taskList');
+                this.$('countTasks').textContent = this.tasks.length;
+                this.$('badgeTasks').textContent = this.tasks.length;
+                if (!this.tasks.length) {
+                    list.innerHTML = `<div class="empty"><i class="fas fa-inbox"></i><p>Нет задач</p></div>`;
+                    return;
+                }
+                list.innerHTML = this.tasks.map(t => `
+                    <div class="item">
+                        <div class="item-content">
+                            <div class="item-title">
+                                ${t.title || 'Без названия'}
+                                ${t.completed ? '<span class="pill pill-green">✓ готово</span>' : '<span class="pill pill-purple">○ в работе</span>'}
+                            </div>
+                            <div class="item-meta">
+                                <span><i class="fas fa-user"></i> ${t.author_user_id}</span>
+                                ${t.description ? `<span><i class="fas fa-align-left"></i> ${t.description.slice(0, 40)}${t.description.length > 40 ? '…' : ''}</span>` : ''}
+                                <span><i class="fas fa-clock"></i> ${new Date(t.created_at).toLocaleDateString('ru')}</span>
+                                <span class="pill pill-gray">v${t.version}</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-ghost btn-sm btn-edit-task" data-id="${t.id}"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-ghost btn-sm btn-delete-task" data-id="${t.id}" style="color:#f87171;"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
-                    <div class="item-actions">
-                        <button class="btn btn-sm btn-outline edit-task-btn" data-id="${t.id}"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger delete-task-btn" data-id="${t.id}"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-            container.querySelectorAll('.edit-task-btn').forEach(btn => btn.addEventListener('click', () => openEditTask(Number(btn.dataset.id))));
-            container.querySelectorAll('.delete-task-btn').forEach(btn => btn.addEventListener('click', () => deleteTask(Number(btn.dataset.id))));
-        }
+                `).join('');
+                list.querySelectorAll('.btn-edit-task').forEach(b => b.onclick = () => this.editTask(+b.dataset.id));
+                list.querySelectorAll('.btn-delete-task').forEach(b => b.onclick = () => this.deleteTask(+b.dataset.id));
+            },
 
-        function renderUsers() {
-            const container = document.getElementById('userList');
-            document.getElementById('userCount').textContent = users.length;
-            if (!users.length) {
-                container.innerHTML = `<div class="empty-state"><i class="fas fa-user-slash"></i> No users</div>`;
-                return;
-            }
-            container.innerHTML = users.map(u => `
-                <div class="list-item">
-                    <div class="item-content">
-                        <div class="item-title">${u.full_name || 'Unnamed'}</div>
-                        <div class="item-sub">
-                            <span><i class="fas fa-id-badge"></i> id ${u.id}</span>
-                            ${u.phone_number ? `<span><i class="fas fa-phone"></i> ${u.phone_number}</span>` : '<span><i class="fas fa-phone-slash"></i> no phone</span>'}
-                            <span>v${u.version}</span>
+            renderUsers() {
+                const list = this.$('userList');
+                this.$('countUsers').textContent = this.users.length;
+                this.$('badgeUsers').textContent = this.users.length;
+                if (!this.users.length) {
+                    list.innerHTML = `<div class="empty"><i class="fas fa-user-slash"></i><p>Нет пользователей</p></div>`;
+                    return;
+                }
+                list.innerHTML = this.users.map(u => `
+                    <div class="item">
+                        <div class="item-content">
+                            <div class="item-title">${u.full_name || 'Без имени'}</div>
+                            <div class="item-meta">
+                                <span><i class="fas fa-id-badge"></i> #${u.id}</span>
+                                ${u.phone_number ? `<span><i class="fas fa-phone"></i> ${u.phone_number}</span>` : '<span class="pill pill-gray">нет телефона</span>'}
+                                <span class="pill pill-gray">v${u.version}</span>
+                            </div>
+                        </div>
+                        <div class="item-actions">
+                            <button class="btn btn-ghost btn-sm btn-edit-user" data-id="${u.id}"><i class="fas fa-edit"></i></button>
+                            <button class="btn btn-ghost btn-sm btn-delete-user" data-id="${u.id}" style="color:#f87171;"><i class="fas fa-trash"></i></button>
                         </div>
                     </div>
-                    <div class="item-actions">
-                        <button class="btn btn-sm btn-outline edit-user-btn" data-id="${u.id}"><i class="fas fa-edit"></i></button>
-                        <button class="btn btn-sm btn-danger delete-user-btn" data-id="${u.id}"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>
-            `).join('');
-            container.querySelectorAll('.edit-user-btn').forEach(btn => btn.addEventListener('click', () => openEditUser(Number(btn.dataset.id))));
-            container.querySelectorAll('.delete-user-btn').forEach(btn => btn.addEventListener('click', () => deleteUser(Number(btn.dataset.id))));
-        }
+                `).join('');
+                list.querySelectorAll('.btn-edit-user').forEach(b => b.onclick = () => this.editUser(+b.dataset.id));
+                list.querySelectorAll('.btn-delete-user').forEach(b => b.onclick = () => this.deleteUser(+b.dataset.id));
+            },
 
-        async function fetchTasks() {
-            const userId = document.getElementById('filterUserId').value;
-            const limit = document.getElementById('filterLimit').value || 10;
-            const offset = document.getElementById('filterOffset').value || 0;
-            try {
-                const data = await fetchJson(apiUrl('/tasks', { user_id: userId, limit, offset }));
-                tasks = data || [];
-            } catch (e) {
-                tasks = [];
-                showToast('Failed to fetch tasks: ' + e.message, 'error');
-            }
-            renderTasks();
-            updateStatsSummary();
-        }
+            updatePagination(type) {
+                const prefix = type === 'task' ? 'task' : 'user';
+                const page = type === 'task' ? this.taskPage : this.userPage;
+                const total = type === 'task' ? this.taskTotal : this.userTotal;
+                const limit = type === 'task' ? this.taskLimit : this.userLimit;
+                const info = this.$(`${prefix}PaginationInfo`);
+                const prevBtn = this.$(`btn${type.charAt(0).toUpperCase() + type.slice(1)}Prev`);
+                const nextBtn = this.$(`btn${type.charAt(0).toUpperCase() + type.slice(1)}Next`);
+                const totalPages = Math.ceil(total / limit) || 1;
+                info.textContent = `Страница ${page} из ${totalPages}`;
+                if (prevBtn) prevBtn.disabled = page <= 1;
+                if (nextBtn) nextBtn.disabled = page >= totalPages || this[`${type}s`].length < limit;
+            },
 
-        async function fetchUsers() {
-            const limit = document.getElementById('userLimit').value || 10;
-            const offset = document.getElementById('userOffset').value || 0;
-            try {
-                const data = await fetchJson(apiUrl('/users', { limit, offset }));
-                users = data || [];
-            } catch (e) {
-                users = [];
-                showToast('Failed to fetch users: ' + e.message, 'error');
-            }
-            renderUsers();
-            updateStatsSummary();
-        }
+            goToPage(type, direction) {
+                const page = type === 'task' ? this.taskPage : this.userPage;
+                const newPage = direction === 'next' ? page + 1 : page - 1;
+                if (newPage < 1) return;
+                if (type === 'task') { this.taskPage = newPage;
+                    this.fetchTasks(); } else { this.userPage = newPage;
+                    this.fetchUsers(); }
+            },
 
-        async function fetchStatistics(from, to) {
-            const params = {};
-            if (from) params.from = from;
-            if (to) params.to = to;
-            try {
-                const data = await fetchJson(apiUrl('/statistics', params));
-                document.getElementById('statCreated').textContent = data.tasks_created ?? '—';
-                document.getElementById('statCompleted').textContent = data.tasks_completed ?? '—';
-                document.getElementById('statRate').innerHTML = (data.tasks_completeed_rate ?? '—') + '<small>%</small>';
-                document.getElementById('statAvgTime').textContent = data.tasks_average_completion_time || '—';
-            } catch (e) {
-                showToast('Stats error: ' + e.message, 'error');
-            }
-        }
+            async createTask(data) {
+                try { await API.createTask(data);
+                    this.toast('Задача создана');
+                    this.taskPage = 1;
+                    await this.fetchTasks(); } catch (e) { this.toast(e.message, 'error'); }
+            },
+            async updateTask(id, data) {
+                try { await API.updateTask(id, data);
+                    this.toast('Задача обновлена');
+                    await this.fetchTasks(); } catch (e) { this.toast(e.message, 'error'); }
+            },
+            async deleteTask(id) {
+                if (!confirm('Удалить задачу?')) return;
+                try { await API.deleteTask(id);
+                    this.toast('Задача удалена');
+                    await this.fetchTasks(); } catch (e) { this.toast(e.message, 'error'); }
+            },
+            async createUser(data) {
+                try { await API.createUser(data);
+                    this.toast('Пользователь создан');
+                    this.userPage = 1;
+                    await this.fetchUsers(); } catch (e) { this.toast(e.message, 'error'); }
+            },
+            async updateUser(id, data) {
+                try { await API.updateUser(id, data);
+                    this.toast('Пользователь обновлен');
+                    await this.fetchUsers(); } catch (e) { this.toast(e.message, 'error'); }
+            },
+            async deleteUser(id) {
+                if (!confirm('Удалить пользователя?')) return;
+                try { await API.deleteUser(id);
+                    this.toast('Пользователь удален');
+                    await this.fetchUsers(); } catch (e) { this.toast(e.message, 'error'); }
+            },
 
-        function updateStatsSummary() {
-            const totalTasks = tasks.length;
-            const totalUsers = users.length;
-            const completed = tasks.filter(t => t.completed).length;
-            const rate = totalTasks ? Math.round((completed/totalTasks)*100) : 0;
-            document.getElementById('totalTasksStat').textContent = totalTasks;
-            document.getElementById('totalUsersStat').textContent = totalUsers;
-            document.getElementById('globalRateStat').textContent = rate + '%';
-        }
+            modalMode: 'task',
+            modalEditId: null,
 
-        // ---- CRUD operations with CORRECT PATCH format ----
-        async function createTask(payload) {
-            try {
-                await fetchJson(apiUrl('/tasks'), { method: 'POST', body: JSON.stringify(payload) });
-                await fetchTasks();
-                showToast('Task created successfully!');
-            } catch (e) { 
-                showToast('Create task error: ' + e.message, 'error');
-            }
-        }
+            openModal(title, html, mode, id = null) {
+                this.$('modalTitle').innerHTML = title;
+                this.$('modalBody').innerHTML = html;
+                this.modalMode = mode;
+                this.modalEditId = id;
+                this.$('modalOverlay').classList.add('active');
+            },
+            closeModal() {
+                this.$('modalOverlay').classList.remove('active');
+                this.modalEditId = null;
+            },
 
-        async function patchTask(id, payload) {
-            try {
-                // Send the payload directly - server expects simple fields, not Nullable objects
-                const response = await fetch(apiUrl(`/tasks/${id}`), {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (!response.ok) {
-                    let errMsg = `${response.status} ${response.statusText}`;
-                    try {
-                        const data = await response.json();
-                        errMsg = data.message || data.error || errMsg;
-                    } catch (_) {}
-                    throw new Error(errMsg);
-                }
-                
-                await fetchTasks();
-                showToast('Task updated successfully!');
-            } catch (e) { 
-                showToast('Update task error: ' + e.message, 'error');
-            }
-        }
+            newTask() {
+                this.openModal(
+                    '<i class="fas fa-plus-circle"></i> Новая задача',
+                    `
+                        <label>Название</label>
+                        <input id="fTitle" value="Задача ${Date.now().toString().slice(-4)}">
+                        <label>Описание</label>
+                        <textarea id="fDesc"></textarea>
+                        <label>ID автора</label>
+                        <input id="fAuthor" type="number" value="1">
+                    `,
+                    'task'
+                );
+            },
+            editTask(id) {
+                const t = this.tasks.find(x => x.id === id);
+                if (!t) return this.toast('Задача не найдена', 'error');
+                this.openModal(
+                    `<i class="fas fa-edit"></i> Задача #${id}`,
+                    `
+                        <label>Название</label>
+                        <input id="fTitle" value="${t.title || ''}">
+                        <label>Описание</label>
+                        <textarea id="fDesc">${t.description || ''}</textarea>
+                        <label>Статус</label>
+                        <select id="fCompleted"><option value="false">В работе</option><option value="true" ${t.completed ? 'selected' : ''}>Готово</option></select>
+                        <label>ID автора</label>
+                        <input id="fAuthor" type="number" value="${t.author_user_id}">
+                    `,
+                    'task',
+                    id
+                );
+            },
+            newUser() {
+                this.openModal(
+                    '<i class="fas fa-user-plus"></i> Новый пользователь',
+                    `
+                        <label>Полное имя</label>
+                        <input id="fName" value="User ${Date.now().toString().slice(-4)}">
+                        <label>Телефон</label>
+                        <input id="fPhone" placeholder="+79001234567">
+                    `,
+                    'user'
+                );
+            },
+            editUser(id) {
+                const u = this.users.find(x => x.id === id);
+                if (!u) return this.toast('Пользователь не найден', 'error');
+                this.openModal(
+                    `<i class="fas fa-user-edit"></i> Пользователь #${id}`,
+                    `
+                        <label>Полное имя</label>
+                        <input id="fName" value="${u.full_name || ''}">
+                        <label>Телефон</label>
+                        <input id="fPhone" value="${u.phone_number || ''}">
+                    `,
+                    'user',
+                    id
+                );
+            },
 
-        async function deleteTask(id) {
-            if (!confirm('Delete this task?')) return;
-            try {
-                await fetchJson(apiUrl(`/tasks/${id}`), { method: 'DELETE' });
-                await fetchTasks();
-                showToast('Task deleted successfully!');
-            } catch (e) { 
-                showToast('Delete error: ' + e.message, 'error');
-            }
-        }
-
-        async function createUser(payload) {
-            try {
-                await fetchJson(apiUrl('/users'), { method: 'POST', body: JSON.stringify(payload) });
-                await fetchUsers();
-                showToast('User created successfully!');
-            } catch (e) { 
-                showToast('Create user error: ' + e.message, 'error');
-            }
-        }
-
-        async function patchUser(id, payload) {
-            try {
-                const response = await fetch(apiUrl(`/users/${id}`), {
-                    method: 'PATCH',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(payload)
-                });
-                
-                if (!response.ok) {
-                    let errMsg = `${response.status} ${response.statusText}`;
-                    try {
-                        const data = await response.json();
-                        errMsg = data.message || data.error || errMsg;
-                    } catch (_) {}
-                    throw new Error(errMsg);
-                }
-                
-                await fetchUsers();
-                showToast('User updated successfully!');
-            } catch (e) { 
-                showToast('Update user error: ' + e.message, 'error');
-            }
-        }
-
-        async function deleteUser(id) {
-            if (!confirm('Delete this user?')) return;
-            try {
-                await fetchJson(apiUrl(`/users/${id}`), { method: 'DELETE' });
-                await fetchUsers();
-                showToast('User deleted successfully!');
-            } catch (e) { 
-                showToast('Delete error: ' + e.message, 'error');
-            }
-        }
-
-        // ---- Modal logic ----
-        const overlay = document.getElementById('modalOverlay');
-        const modalTitle = document.getElementById('modalTitle');
-        const modalBody = document.getElementById('modalBody');
-        const modalForm = document.getElementById('modalForm');
-        let modalMode = 'task';
-        let editId = null;
-
-        function openModal(title, html, mode, id = null) {
-            modalTitle.innerHTML = title;
-            modalBody.innerHTML = html;
-            modalMode = mode;
-            editId = id;
-            overlay.classList.add('active');
-        }
-        function closeModal() { overlay.classList.remove('active'); }
-        document.getElementById('modalCancel').addEventListener('click', closeModal);
-        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
-
-        function openCreateTask() {
-            openModal(
-                '<i class="fas fa-plus-circle"></i> New Task',
-                `<label>Title *</label><input id="taskTitle" placeholder="Task title" value="Task ${Date.now().toString().slice(-4)}">
-                 <label>Description</label><textarea id="taskDesc" placeholder="Description (optional)"></textarea>
-                 <label>Author user ID *</label><input id="taskAuthor" type="number" placeholder="user_id" value="1">`,
-                'task'
-            );
-        }
-
-        function openEditTask(id) {
-            const task = tasks.find(t => t.id === id);
-            if (!task) return showToast('Task not found', 'error');
-            openModal(
-                `<i class="fas fa-edit"></i> Edit Task #${id}`,
-                `<label>Title *</label><input id="taskTitle" value="${task.title || ''}">
-                 <label>Description</label><textarea id="taskDesc">${task.description || ''}</textarea>
-                 <label>Completed</label>
-                 <select id="taskCompleted"><option value="false">No</option><option value="true" ${task.completed?'selected':''}>Yes</option></select>
-                 <label>Author user ID</label><input id="taskAuthor" type="number" value="${task.author_user_id}">`,
-                'task', id
-            );
-        }
-
-        function openCreateUser() {
-            openModal(
-                '<i class="fas fa-user-plus"></i> New User',
-                `<label>Full name *</label><input id="userFullName" placeholder="Full name" value="User ${Date.now().toString().slice(-4)}">
-                 <label>Phone number</label><input id="userPhone" placeholder="+1234567890" value="">`,
-                'user'
-            );
-        }
-
-        function openEditUser(id) {
-            const user = users.find(u => u.id === id);
-            if (!user) return showToast('User not found', 'error');
-            openModal(
-                `<i class="fas fa-user-edit"></i> Edit User #${id}`,
-                `<label>Full name *</label><input id="userFullName" value="${user.full_name || ''}">
-                 <label>Phone number</label><input id="userPhone" value="${user.phone_number || ''}">`,
-                'user', id
-            );
-        }
-
-        // ---- Submit modal with CORRECT PATCH format ----
-        modalForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            if (modalMode === 'task') {
-                const title = document.getElementById('taskTitle')?.value.trim();
-                const description = document.getElementById('taskDesc')?.value;
-                const author_user_id = parseInt(document.getElementById('taskAuthor')?.value);
-                const completed = document.getElementById('taskCompleted')?.value === 'true';
-                
-                if (!title) return showToast('Title is required', 'error');
-                if (!author_user_id) return showToast('Author user ID is required', 'error');
-                
-                if (editId) {
-                    // CORRECT format: send simple fields, not Nullable objects
-                    const patch = {};
-                    
-                    // Title - always send as string
-                    patch.title = title;
-                    
-                    // Description - three-state logic with simple field
-                    if (description === '') {
-                        patch.description = null;
-                    } else if (description !== undefined && description !== null) {
-                        patch.description = description;
+            async handleSubmit(e) {
+                e.preventDefault();
+                const mode = this.modalMode;
+                const id = this.modalEditId;
+                if (mode === 'task') {
+                    const title = this.$('fTitle')?.value.trim();
+                    const desc = this.$('fDesc')?.value.trim() || null;
+                    const author = +this.$('fAuthor')?.value;
+                    const completed = this.$('fCompleted')?.value === 'true';
+                    if (!title) return this.toast('Название обязательно', 'error');
+                    if (!author) return this.toast('ID автора обязателен', 'error');
+                    if (id) {
+                        const data = { title, completed };
+                        if (desc !== null) data.description = desc;
+                        await this.updateTask(id, data);
+                    } else {
+                        await this.createTask({ title, description: desc, author_user_id: author });
                     }
-                    
-                    // Completed - send as boolean
-                    patch.completed = completed;
-                    
-                    patchTask(editId, patch);
-                } else {
-                    createTask({ 
-                        title, 
-                        description: description || undefined, 
-                        author_user_id 
-                    });
-                }
-                closeModal();
-            } else if (modalMode === 'user') {
-                const full_name = document.getElementById('userFullName')?.value.trim();
-                const phone_number = document.getElementById('userPhone')?.value.trim();
-                
-                if (!full_name) return showToast('Full name is required', 'error');
-                
-                if (editId) {
-                    const patch = { full_name };
-                    if (phone_number === '') {
-                        patch.phone_number = null;
-                    } else if (phone_number !== undefined && phone_number !== null) {
-                        patch.phone_number = phone_number;
+                    this.closeModal();
+                } else if (mode === 'user') {
+                    const name = this.$('fName')?.value.trim();
+                    const phone = this.$('fPhone')?.value.trim() || null;
+                    if (!name) return this.toast('Имя обязательно', 'error');
+                    if (id) {
+                        const data = { full_name: name };
+                        if (phone !== null) data.phone_number = phone;
+                        await this.updateUser(id, data);
+                    } else {
+                        await this.createUser({ full_name: name, phone_number: phone });
                     }
-                    patchUser(editId, patch);
-                } else {
-                    createUser({ full_name, phone_number: phone_number || undefined });
+                    this.closeModal();
                 }
-                closeModal();
+            },
+
+            init() {
+                this.$$('.tab').forEach(tab => {
+                    tab.onclick = () => {
+                        this.$$('.tab').forEach(t => t.classList.remove('active'));
+                        tab.classList.add('active');
+                        const name = tab.dataset.tab;
+                        this.$$('.panel').forEach(p => p.classList.remove('active'));
+                        this.$(`panel-${name}`).classList.add('active');
+                        if (name === 'tasks') { this.taskPage = 1;
+                            this.fetchTasks(); } else if (name === 'users') { this.userPage = 1;
+                            this.fetchUsers(); } else if (name === 'stats') {
+                            this.fetchStats(this.$('statFrom').value, this.$('statTo').value); }
+                    };
+                });
+
+                this.$('btnCreateTask').onclick = () => this.newTask();
+                this.$('btnCreateUser').onclick = () => this.newUser();
+                this.$('btnRefresh').onclick = () => {
+                    this.taskPage = 1;
+                    this.userPage = 1;
+                    this.fetchTasks();
+                    this.fetchUsers();
+                    this.fetchStats(this.$('statFrom').value, this.$('statTo').value);
+                    this.toast('Обновлено', 'info');
+                };
+                this.$('btnApplyTaskFilter').onclick = () => { this.taskPage = 1;
+                    this.fetchTasks(); };
+                this.$('btnRefreshTasks').onclick = () => { this.taskPage = 1;
+                    this.fetchTasks(); };
+                this.$('taskLimit').onchange = () => { this.taskPage = 1;
+                    this.fetchTasks(); };
+                this.$('btnApplyUserFilter').onclick = () => { this.userPage = 1;
+                    this.fetchUsers(); };
+                this.$('btnRefreshUsers').onclick = () => { this.userPage = 1;
+                    this.fetchUsers(); };
+                this.$('userLimit').onchange = () => { this.userPage = 1;
+                    this.fetchUsers(); };
+                this.$('btnTaskPrev').onclick = () => this.goToPage('task', 'prev');
+                this.$('btnTaskNext').onclick = () => this.goToPage('task', 'next');
+                this.$('btnUserPrev').onclick = () => this.goToPage('user', 'prev');
+                this.$('btnUserNext').onclick = () => this.goToPage('user', 'next');
+                this.$('btnApplyStats').onclick = () => this.fetchStats(this.$('statFrom').value, this.$('statTo')
+                .value);
+                this.$('btnRefreshStats').onclick = () => this.fetchStats(this.$('statFrom').value, this.$('statTo')
+                    .value);
+
+                this.$('btnModalCancel').onclick = () => this.closeModal();
+                this.$('modalOverlay').onclick = (e) => { if (e.target === this.$('modalOverlay')) this.closeModal(); };
+                this.$('modalForm').onsubmit = (e) => this.handleSubmit(e);
+
+                document.onkeydown = (e) => {
+                    if (e.key === 'Escape') this.closeModal();
+                    if ((e.ctrlKey || e.metaKey) && e.key === 'r') { e.preventDefault();
+                        this.$('btnRefresh').click(); }
+                };
+
+                this.fetchTasks();
+                this.fetchUsers();
+                this.fetchStats();
             }
-        });
+        };
 
-        // ---- Event listeners ----
-        document.getElementById('globalCreateTask').addEventListener('click', openCreateTask);
-        document.getElementById('globalCreateUser').addEventListener('click', openCreateUser);
-        document.getElementById('refreshAll').addEventListener('click', () => { fetchTasks(); fetchUsers(); });
-        document.getElementById('applyTaskFilter').addEventListener('click', fetchTasks);
-        document.getElementById('applyUserFilter').addEventListener('click', fetchUsers);
-        document.getElementById('refreshTasksBtn').addEventListener('click', fetchTasks);
-        document.getElementById('refreshUsersBtn').addEventListener('click', fetchUsers);
-        document.getElementById('refreshStatsBtn').addEventListener('click', () => {
-            const from = document.getElementById('statFrom').value;
-            const to = document.getElementById('statTo').value;
-            fetchStatistics(from, to);
-        });
-        document.getElementById('applyStatFilter').addEventListener('click', () => {
-            const from = document.getElementById('statFrom').value;
-            const to = document.getElementById('statTo').value;
-            fetchStatistics(from, to);
-        });
-
-        // ---- Tabs ----
-        document.querySelectorAll('.tab-btn').forEach(btn => {
-            btn.addEventListener('click', function() {
-                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                this.classList.add('active');
-                const tab = this.dataset.tab;
-                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
-                document.getElementById('panel-' + tab).classList.add('active');
-                if (tab === 'stats') {
-                    const from = document.getElementById('statFrom').value;
-                    const to = document.getElementById('statTo').value;
-                    fetchStatistics(from, to);
-                }
-            });
-        });
-
-        // ---- Init ----
-        fetchTasks();
-        fetchUsers();
-        fetchStatistics();
-    })();
-</script>
+        document.addEventListener('DOMContentLoaded', () => App.init());
+    </script>
 </body>
 </html>
