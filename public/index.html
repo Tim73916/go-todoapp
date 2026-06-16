@@ -1,0 +1,810 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo App · Advanced</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: #f0f4f9;
+            color: #0b1a33;
+            padding: 30px 24px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+        .app {
+            max-width: 1280px;
+            width: 100%;
+        }
+        .app-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 16px 20px;
+            margin-bottom: 32px;
+        }
+        .app-header h1 {
+            font-weight: 700;
+            font-size: 1.9rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            letter-spacing: -0.02em;
+        }
+        .app-header h1 i {
+            color: #2a7de1;
+            font-size: 2.2rem;
+        }
+        .app-header .badge-api {
+            background: #d2def0;
+            padding: 4px 18px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #1e3a6b;
+            letter-spacing: 0.03em;
+        }
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            border: none;
+            padding: 8px 20px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: 0.15s ease;
+            background: white;
+            color: #1a2f4e;
+            border: 1px solid #d4dfeb;
+        }
+        .btn i { font-size: 0.9rem; }
+        .btn-primary { background: #1f5fcf; color: white; border-color: #1f5fcf; }
+        .btn-primary i { color: white; }
+        .btn-primary:hover { background: #1a4fb0; border-color: #1a4fb0; }
+        .btn-success { background: #0f8f5f; color: white; border-color: #0f8f5f; }
+        .btn-success i { color: white; }
+        .btn-success:hover { background: #0b784d; }
+        .btn-outline { background: transparent; border: 1px solid #d4dfeb; }
+        .btn-outline:hover { background: #e8eef5; }
+        .btn-danger { background: #d14545; color: white; border-color: #d14545; }
+        .btn-danger i { color: white; }
+        .btn-danger:hover { background: #b83636; }
+        .btn-sm { padding: 4px 14px; font-size: 0.75rem; gap: 4px; }
+        .btn-icon { padding: 6px 12px; }
+        .tabs {
+            display: flex;
+            gap: 4px;
+            background: #e2eaf3;
+            padding: 4px;
+            border-radius: 60px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+        .tab-btn {
+            padding: 10px 28px;
+            border: none;
+            border-radius: 60px;
+            background: transparent;
+            font-weight: 600;
+            font-size: 0.9rem;
+            color: #29456b;
+            cursor: pointer;
+            transition: 0.15s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .tab-btn i { font-size: 1rem; }
+        .tab-btn.active {
+            background: white;
+            color: #1a4fb0;
+            box-shadow: 0 4px 12px rgba(0,20,50,0.08);
+        }
+        .tab-btn:hover:not(.active) { background: rgba(255,255,255,0.5); }
+        .panel {
+            display: none;
+            animation: fadeUp 0.2s ease;
+        }
+        .panel.active { display: block; }
+        @keyframes fadeUp { 0% { opacity:0.4; transform: translateY(6px); } 100% { opacity:1; transform: translateY(0); } }
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 24px 28px;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.03);
+            border: 1px solid #e3ebf5;
+            margin-bottom: 24px;
+        }
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px 16px;
+            margin-bottom: 20px;
+        }
+        .card-header h2 {
+            font-weight: 600;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .card-header h2 i { color: #2a7de1; }
+        .card-header .badge-count {
+            background: #e8eff8;
+            padding: 2px 16px;
+            border-radius: 40px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            color: #1a3f6e;
+        }
+        .filter-bar {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 12px 18px;
+            background: #f5f9ff;
+            padding: 10px 18px;
+            border-radius: 60px;
+            margin-bottom: 18px;
+        }
+        .filter-bar label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #2d4a73;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .filter-bar input, .filter-bar select {
+            border: 1px solid #d4dfeb;
+            border-radius: 40px;
+            padding: 6px 14px;
+            font-size: 0.8rem;
+            background: white;
+            max-width: 130px;
+        }
+        .filter-bar input:focus, .filter-bar select:focus { outline: none; border-color: #1f5fcf; }
+        .list-container {
+            max-height: 460px;
+            overflow-y: auto;
+            padding-right: 4px;
+        }
+        .list-item {
+            background: #fafdff;
+            border-radius: 18px;
+            padding: 14px 18px;
+            margin-bottom: 10px;
+            border: 1px solid #eaf1fa;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+            transition: 0.1s;
+        }
+        .list-item:hover { background: #f2f8ff; border-color: #cbddea; }
+        .item-content { display: flex; flex-direction: column; gap: 4px; flex: 1; min-width: 140px; }
+        .item-title { font-weight: 600; font-size: 0.95rem; }
+        .item-sub {
+            font-size: 0.8rem;
+            color: #4d6a90;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px 18px;
+        }
+        .item-sub i { width: 16px; margin-right: 4px; }
+        .item-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+        .empty-state { color: #8aa1c0; padding: 32px 0; text-align: center; font-size: 0.95rem; }
+        .pill {
+            background: #e1edfc;
+            color: #1a4fb0;
+            padding: 2px 14px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+        .pill-success { background: #d4f0e6; color: #0b6d47; }
+        .stat-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px,1fr));
+            gap: 16px;
+            background: #f6faff;
+            border-radius: 24px;
+            padding: 18px 22px;
+        }
+        .stat-item .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.04em; color: #4d6a90; }
+        .stat-item .stat-value { font-weight: 700; font-size: 1.8rem; color: #0b1a33; }
+        .stat-item .stat-value small { font-weight: 400; font-size: 1rem; color: #6a88ae; margin-left: 4px; }
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10,25,50,0.5);
+            backdrop-filter: blur(6px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal {
+            background: white;
+            border-radius: 36px;
+            padding: 32px 36px;
+            width: 100%;
+            max-width: 480px;
+            box-shadow: 0 40px 80px rgba(0,0,0,0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        .modal h3 { font-weight: 600; margin-bottom: 20px; display: flex; align-items: center; gap: 10px; }
+        .modal label { font-weight: 500; font-size: 0.8rem; color: #1e3d62; display: block; margin: 14px 0 4px; }
+        .modal input, .modal textarea, .modal select {
+            width: 100%;
+            padding: 10px 16px;
+            border: 1px solid #d4dfeb;
+            border-radius: 16px;
+            font-size: 0.9rem;
+            background: white;
+        }
+        .modal input:focus, .modal textarea:focus { outline: none; border-color: #1f5fcf; }
+        .modal textarea { min-height: 70px; resize: vertical; }
+        .modal-actions { display: flex; justify-content: flex-end; gap: 12px; margin-top: 24px; }
+        .btn-close-modal { background: #e8eef5; border: none; padding: 10px 28px; border-radius: 60px; font-weight: 500; cursor: pointer; }
+        .flex { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+        .gap-8 { gap: 8px; }
+        .mt-16 { margin-top: 16px; }
+        .text-muted { color: #6a88ae; font-size: 0.8rem; }
+        .toast {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #0b1a33;
+            color: white;
+            padding: 14px 28px;
+            border-radius: 60px;
+            font-weight: 500;
+            font-size: 0.9rem;
+            box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+            z-index: 2000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: 0.3s ease;
+            pointer-events: none;
+        }
+        .toast.show { opacity: 1; transform: translateY(0); }
+        .toast.success { background: #0f8f5f; }
+        .toast.error { background: #d14545; }
+        @media (max-width: 700px) {
+            .app-header { flex-direction: column; align-items: start; }
+            .tabs { width: 100%; border-radius: 40px; }
+            .tab-btn { flex: 1; justify-content: center; padding: 8px 12px; font-size: 0.8rem; }
+            .card { padding: 18px 16px; }
+            .filter-bar { border-radius: 30px; }
+            .modal { padding: 24px 20px; }
+        }
+    </style>
+</head>
+<body>
+<div class="app">
+    <div class="app-header">
+        <h1><i class="fas fa-check-circle"></i> Todo Manager <span class="badge-api">API v1</span></h1>
+        <div class="header-actions">
+            <button class="btn btn-success" id="globalCreateTask"><i class="fas fa-plus"></i> New Task</button>
+            <button class="btn btn-primary" id="globalCreateUser"><i class="fas fa-user-plus"></i> New User</button>
+            <button class="btn btn-outline" id="refreshAll"><i class="fas fa-sync-alt"></i> Refresh</button>
+        </div>
+    </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" data-tab="tasks"><i class="fas fa-tasks"></i> Tasks</button>
+        <button class="tab-btn" data-tab="users"><i class="fas fa-users"></i> Users</button>
+        <button class="tab-btn" data-tab="stats"><i class="fas fa-chart-pie"></i> Statistics</button>
+    </div>
+
+    <div id="panel-tasks" class="panel active">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-list-check"></i> Tasks</h2>
+                <span class="badge-count" id="taskCount">0</span>
+            </div>
+            <div class="filter-bar">
+                <label><i class="fas fa-user"></i> user_id <input type="number" id="filterUserId" placeholder="any" value=""></label>
+                <label><i class="fas fa-sort-amount-down"></i> limit <input type="number" id="filterLimit" value="10"></label>
+                <label><i class="fas fa-arrow-right"></i> offset <input type="number" id="filterOffset" value="0"></label>
+                <button class="btn btn-sm btn-outline" id="applyTaskFilter"><i class="fas fa-filter"></i> Apply</button>
+                <button class="btn btn-sm btn-outline" id="refreshTasksBtn"><i class="fas fa-rotate-right"></i></button>
+            </div>
+            <div class="list-container" id="taskList"><div class="empty-state"><i class="fas fa-inbox"></i> No tasks</div></div>
+        </div>
+    </div>
+
+    <div id="panel-users" class="panel">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-user-group"></i> Users</h2>
+                <span class="badge-count" id="userCount">0</span>
+            </div>
+            <div class="filter-bar">
+                <label><i class="fas fa-sort-amount-down"></i> limit <input type="number" id="userLimit" value="10"></label>
+                <label><i class="fas fa-arrow-right"></i> offset <input type="number" id="userOffset" value="0"></label>
+                <button class="btn btn-sm btn-outline" id="applyUserFilter"><i class="fas fa-filter"></i> Apply</button>
+                <button class="btn btn-sm btn-outline" id="refreshUsersBtn"><i class="fas fa-rotate-right"></i></button>
+            </div>
+            <div class="list-container" id="userList"><div class="empty-state"><i class="fas fa-user-slash"></i> No users</div></div>
+        </div>
+    </div>
+
+    <div id="panel-stats" class="panel">
+        <div class="card">
+            <div class="card-header">
+                <h2><i class="fas fa-chart-simple"></i> Statistics</h2>
+                <div class="flex gap-8">
+                    <input type="date" id="statFrom" style="padding:6px 14px; border-radius:40px; border:1px solid #d4dfeb;">
+                    <input type="date" id="statTo" style="padding:6px 14px; border-radius:40px; border:1px solid #d4dfeb;">
+                    <button class="btn btn-sm btn-outline" id="applyStatFilter"><i class="fas fa-calendar"></i> Filter</button>
+                    <button class="btn btn-sm btn-outline" id="refreshStatsBtn"><i class="fas fa-rotate-right"></i></button>
+                </div>
+            </div>
+            <div class="stat-grid" id="statisticsDisplay">
+                <div class="stat-item"><span class="stat-label">Tasks created</span><div class="stat-value" id="statCreated">—</div></div>
+                <div class="stat-item"><span class="stat-label">Completed</span><div class="stat-value" id="statCompleted">—</div></div>
+                <div class="stat-item"><span class="stat-label">Completion rate</span><div class="stat-value" id="statRate">—<small>%</small></div></div>
+                <div class="stat-item"><span class="stat-label">Avg completion time</span><div class="stat-value" id="statAvgTime">—</div></div>
+            </div>
+            <div class="mt-16 text-muted"><i class="fas fa-info-circle"></i> Statistics reflect tasks across all users. Use date filters to narrow period.</div>
+        </div>
+        <div class="card" style="background: #f7fbff;">
+            <div style="display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px;">
+                <span><i class="fas fa-database"></i> <strong>Total tasks:</strong> <span id="totalTasksStat">0</span></span>
+                <span><i class="fas fa-user"></i> <strong>Total users:</strong> <span id="totalUsersStat">0</span></span>
+                <span><i class="fas fa-check-circle"></i> <strong>Completion rate (global):</strong> <span id="globalRateStat">0%</span></span>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal" id="modalContent">
+            <h3 id="modalTitle"><i class="fas fa-pen"></i> New Task</h3>
+            <form id="modalForm">
+                <div id="modalBody"></div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-close-modal" id="modalCancel">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="modalSubmit"><i class="fas fa-save"></i> Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="toast" class="toast"></div>
+</div>
+
+<script>
+    (function() {
+        const API_BASE = 'http://127.0.0.1:5050/api/v1';
+
+        function apiUrl(path, params = {}) {
+            const url = new URL(API_BASE + path);
+            Object.keys(params).forEach(k => {
+                if (params[k] !== undefined && params[k] !== '' && params[k] !== null) url.searchParams.append(k, params[k]);
+            });
+            return url.toString();
+        }
+
+        async function fetchJson(url, opts = {}) {
+            const res = await fetch(url, {
+                headers: { 'Accept': 'application/json', 'Content-Type': 'application/json' },
+                ...opts,
+            });
+            if (!res.ok) {
+                let errMsg = `${res.status} ${res.statusText}`;
+                try {
+                    const data = await res.json();
+                    errMsg = data.message || data.error || errMsg;
+                } catch (_) {}
+                throw new Error(errMsg);
+            }
+            if (res.status === 204) return null;
+            return res.json();
+        }
+
+        function formatDate(d) { if (!d) return '—'; return new Date(d).toLocaleString(); }
+        
+        function showToast(message, type = 'success') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = 'toast ' + type;
+            setTimeout(() => toast.classList.add('show'), 10);
+            setTimeout(() => toast.classList.remove('show'), 3000);
+        }
+
+        let tasks = [];
+        let users = [];
+
+        function renderTasks() {
+            const container = document.getElementById('taskList');
+            document.getElementById('taskCount').textContent = tasks.length;
+            if (!tasks.length) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i> No tasks — create one!</div>`;
+                return;
+            }
+            container.innerHTML = tasks.map(t => `
+                <div class="list-item">
+                    <div class="item-content">
+                        <div class="item-title">${t.title || 'untitled'} ${t.completed ? '<span class="pill pill-success">done</span>' : '<span class="pill">open</span>'}</div>
+                        <div class="item-sub">
+                            <span><i class="fas fa-user"></i> user ${t.author_user_id}</span>
+                            ${t.description ? `<span><i class="fas fa-align-left"></i> ${t.description.substring(0, 50)}${t.description.length>50?'…':''}</span>` : ''}
+                            <span><i class="far fa-calendar-alt"></i> ${formatDate(t.created_at)}</span>
+                            ${t.completed_at ? `<span><i class="fas fa-check"></i> ${formatDate(t.completed_at)}</span>` : ''}
+                            <span>v${t.version}</span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-sm btn-outline edit-task-btn" data-id="${t.id}"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger delete-task-btn" data-id="${t.id}"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            container.querySelectorAll('.edit-task-btn').forEach(btn => btn.addEventListener('click', () => openEditTask(Number(btn.dataset.id))));
+            container.querySelectorAll('.delete-task-btn').forEach(btn => btn.addEventListener('click', () => deleteTask(Number(btn.dataset.id))));
+        }
+
+        function renderUsers() {
+            const container = document.getElementById('userList');
+            document.getElementById('userCount').textContent = users.length;
+            if (!users.length) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-user-slash"></i> No users</div>`;
+                return;
+            }
+            container.innerHTML = users.map(u => `
+                <div class="list-item">
+                    <div class="item-content">
+                        <div class="item-title">${u.full_name || 'Unnamed'}</div>
+                        <div class="item-sub">
+                            <span><i class="fas fa-id-badge"></i> id ${u.id}</span>
+                            ${u.phone_number ? `<span><i class="fas fa-phone"></i> ${u.phone_number}</span>` : '<span><i class="fas fa-phone-slash"></i> no phone</span>'}
+                            <span>v${u.version}</span>
+                        </div>
+                    </div>
+                    <div class="item-actions">
+                        <button class="btn btn-sm btn-outline edit-user-btn" data-id="${u.id}"><i class="fas fa-edit"></i></button>
+                        <button class="btn btn-sm btn-danger delete-user-btn" data-id="${u.id}"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+            container.querySelectorAll('.edit-user-btn').forEach(btn => btn.addEventListener('click', () => openEditUser(Number(btn.dataset.id))));
+            container.querySelectorAll('.delete-user-btn').forEach(btn => btn.addEventListener('click', () => deleteUser(Number(btn.dataset.id))));
+        }
+
+        async function fetchTasks() {
+            const userId = document.getElementById('filterUserId').value;
+            const limit = document.getElementById('filterLimit').value || 10;
+            const offset = document.getElementById('filterOffset').value || 0;
+            try {
+                const data = await fetchJson(apiUrl('/tasks', { user_id: userId, limit, offset }));
+                tasks = data || [];
+            } catch (e) {
+                tasks = [];
+                showToast('Failed to fetch tasks: ' + e.message, 'error');
+            }
+            renderTasks();
+            updateStatsSummary();
+        }
+
+        async function fetchUsers() {
+            const limit = document.getElementById('userLimit').value || 10;
+            const offset = document.getElementById('userOffset').value || 0;
+            try {
+                const data = await fetchJson(apiUrl('/users', { limit, offset }));
+                users = data || [];
+            } catch (e) {
+                users = [];
+                showToast('Failed to fetch users: ' + e.message, 'error');
+            }
+            renderUsers();
+            updateStatsSummary();
+        }
+
+        async function fetchStatistics(from, to) {
+            const params = {};
+            if (from) params.from = from;
+            if (to) params.to = to;
+            try {
+                const data = await fetchJson(apiUrl('/statistics', params));
+                document.getElementById('statCreated').textContent = data.tasks_created ?? '—';
+                document.getElementById('statCompleted').textContent = data.tasks_completed ?? '—';
+                document.getElementById('statRate').innerHTML = (data.tasks_completeed_rate ?? '—') + '<small>%</small>';
+                document.getElementById('statAvgTime').textContent = data.tasks_average_completion_time || '—';
+            } catch (e) {
+                showToast('Stats error: ' + e.message, 'error');
+            }
+        }
+
+        function updateStatsSummary() {
+            const totalTasks = tasks.length;
+            const totalUsers = users.length;
+            const completed = tasks.filter(t => t.completed).length;
+            const rate = totalTasks ? Math.round((completed/totalTasks)*100) : 0;
+            document.getElementById('totalTasksStat').textContent = totalTasks;
+            document.getElementById('totalUsersStat').textContent = totalUsers;
+            document.getElementById('globalRateStat').textContent = rate + '%';
+        }
+
+        // ---- CRUD operations with CORRECT PATCH format ----
+        async function createTask(payload) {
+            try {
+                await fetchJson(apiUrl('/tasks'), { method: 'POST', body: JSON.stringify(payload) });
+                await fetchTasks();
+                showToast('Task created successfully!');
+            } catch (e) { 
+                showToast('Create task error: ' + e.message, 'error');
+            }
+        }
+
+        async function patchTask(id, payload) {
+            try {
+                // Send the payload directly - server expects simple fields, not Nullable objects
+                const response = await fetch(apiUrl(`/tasks/${id}`), {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    let errMsg = `${response.status} ${response.statusText}`;
+                    try {
+                        const data = await response.json();
+                        errMsg = data.message || data.error || errMsg;
+                    } catch (_) {}
+                    throw new Error(errMsg);
+                }
+                
+                await fetchTasks();
+                showToast('Task updated successfully!');
+            } catch (e) { 
+                showToast('Update task error: ' + e.message, 'error');
+            }
+        }
+
+        async function deleteTask(id) {
+            if (!confirm('Delete this task?')) return;
+            try {
+                await fetchJson(apiUrl(`/tasks/${id}`), { method: 'DELETE' });
+                await fetchTasks();
+                showToast('Task deleted successfully!');
+            } catch (e) { 
+                showToast('Delete error: ' + e.message, 'error');
+            }
+        }
+
+        async function createUser(payload) {
+            try {
+                await fetchJson(apiUrl('/users'), { method: 'POST', body: JSON.stringify(payload) });
+                await fetchUsers();
+                showToast('User created successfully!');
+            } catch (e) { 
+                showToast('Create user error: ' + e.message, 'error');
+            }
+        }
+
+        async function patchUser(id, payload) {
+            try {
+                const response = await fetch(apiUrl(`/users/${id}`), {
+                    method: 'PATCH',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                
+                if (!response.ok) {
+                    let errMsg = `${response.status} ${response.statusText}`;
+                    try {
+                        const data = await response.json();
+                        errMsg = data.message || data.error || errMsg;
+                    } catch (_) {}
+                    throw new Error(errMsg);
+                }
+                
+                await fetchUsers();
+                showToast('User updated successfully!');
+            } catch (e) { 
+                showToast('Update user error: ' + e.message, 'error');
+            }
+        }
+
+        async function deleteUser(id) {
+            if (!confirm('Delete this user?')) return;
+            try {
+                await fetchJson(apiUrl(`/users/${id}`), { method: 'DELETE' });
+                await fetchUsers();
+                showToast('User deleted successfully!');
+            } catch (e) { 
+                showToast('Delete error: ' + e.message, 'error');
+            }
+        }
+
+        // ---- Modal logic ----
+        const overlay = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalBody = document.getElementById('modalBody');
+        const modalForm = document.getElementById('modalForm');
+        let modalMode = 'task';
+        let editId = null;
+
+        function openModal(title, html, mode, id = null) {
+            modalTitle.innerHTML = title;
+            modalBody.innerHTML = html;
+            modalMode = mode;
+            editId = id;
+            overlay.classList.add('active');
+        }
+        function closeModal() { overlay.classList.remove('active'); }
+        document.getElementById('modalCancel').addEventListener('click', closeModal);
+        overlay.addEventListener('click', (e) => { if (e.target === overlay) closeModal(); });
+
+        function openCreateTask() {
+            openModal(
+                '<i class="fas fa-plus-circle"></i> New Task',
+                `<label>Title *</label><input id="taskTitle" placeholder="Task title" value="Task ${Date.now().toString().slice(-4)}">
+                 <label>Description</label><textarea id="taskDesc" placeholder="Description (optional)"></textarea>
+                 <label>Author user ID *</label><input id="taskAuthor" type="number" placeholder="user_id" value="1">`,
+                'task'
+            );
+        }
+
+        function openEditTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (!task) return showToast('Task not found', 'error');
+            openModal(
+                `<i class="fas fa-edit"></i> Edit Task #${id}`,
+                `<label>Title *</label><input id="taskTitle" value="${task.title || ''}">
+                 <label>Description</label><textarea id="taskDesc">${task.description || ''}</textarea>
+                 <label>Completed</label>
+                 <select id="taskCompleted"><option value="false">No</option><option value="true" ${task.completed?'selected':''}>Yes</option></select>
+                 <label>Author user ID</label><input id="taskAuthor" type="number" value="${task.author_user_id}">`,
+                'task', id
+            );
+        }
+
+        function openCreateUser() {
+            openModal(
+                '<i class="fas fa-user-plus"></i> New User',
+                `<label>Full name *</label><input id="userFullName" placeholder="Full name" value="User ${Date.now().toString().slice(-4)}">
+                 <label>Phone number</label><input id="userPhone" placeholder="+1234567890" value="">`,
+                'user'
+            );
+        }
+
+        function openEditUser(id) {
+            const user = users.find(u => u.id === id);
+            if (!user) return showToast('User not found', 'error');
+            openModal(
+                `<i class="fas fa-user-edit"></i> Edit User #${id}`,
+                `<label>Full name *</label><input id="userFullName" value="${user.full_name || ''}">
+                 <label>Phone number</label><input id="userPhone" value="${user.phone_number || ''}">`,
+                'user', id
+            );
+        }
+
+        // ---- Submit modal with CORRECT PATCH format ----
+        modalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            if (modalMode === 'task') {
+                const title = document.getElementById('taskTitle')?.value.trim();
+                const description = document.getElementById('taskDesc')?.value;
+                const author_user_id = parseInt(document.getElementById('taskAuthor')?.value);
+                const completed = document.getElementById('taskCompleted')?.value === 'true';
+                
+                if (!title) return showToast('Title is required', 'error');
+                if (!author_user_id) return showToast('Author user ID is required', 'error');
+                
+                if (editId) {
+                    // CORRECT format: send simple fields, not Nullable objects
+                    const patch = {};
+                    
+                    // Title - always send as string
+                    patch.title = title;
+                    
+                    // Description - three-state logic with simple field
+                    if (description === '') {
+                        patch.description = null;
+                    } else if (description !== undefined && description !== null) {
+                        patch.description = description;
+                    }
+                    
+                    // Completed - send as boolean
+                    patch.completed = completed;
+                    
+                    patchTask(editId, patch);
+                } else {
+                    createTask({ 
+                        title, 
+                        description: description || undefined, 
+                        author_user_id 
+                    });
+                }
+                closeModal();
+            } else if (modalMode === 'user') {
+                const full_name = document.getElementById('userFullName')?.value.trim();
+                const phone_number = document.getElementById('userPhone')?.value.trim();
+                
+                if (!full_name) return showToast('Full name is required', 'error');
+                
+                if (editId) {
+                    const patch = { full_name };
+                    if (phone_number === '') {
+                        patch.phone_number = null;
+                    } else if (phone_number !== undefined && phone_number !== null) {
+                        patch.phone_number = phone_number;
+                    }
+                    patchUser(editId, patch);
+                } else {
+                    createUser({ full_name, phone_number: phone_number || undefined });
+                }
+                closeModal();
+            }
+        });
+
+        // ---- Event listeners ----
+        document.getElementById('globalCreateTask').addEventListener('click', openCreateTask);
+        document.getElementById('globalCreateUser').addEventListener('click', openCreateUser);
+        document.getElementById('refreshAll').addEventListener('click', () => { fetchTasks(); fetchUsers(); });
+        document.getElementById('applyTaskFilter').addEventListener('click', fetchTasks);
+        document.getElementById('applyUserFilter').addEventListener('click', fetchUsers);
+        document.getElementById('refreshTasksBtn').addEventListener('click', fetchTasks);
+        document.getElementById('refreshUsersBtn').addEventListener('click', fetchUsers);
+        document.getElementById('refreshStatsBtn').addEventListener('click', () => {
+            const from = document.getElementById('statFrom').value;
+            const to = document.getElementById('statTo').value;
+            fetchStatistics(from, to);
+        });
+        document.getElementById('applyStatFilter').addEventListener('click', () => {
+            const from = document.getElementById('statFrom').value;
+            const to = document.getElementById('statTo').value;
+            fetchStatistics(from, to);
+        });
+
+        // ---- Tabs ----
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                const tab = this.dataset.tab;
+                document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+                document.getElementById('panel-' + tab).classList.add('active');
+                if (tab === 'stats') {
+                    const from = document.getElementById('statFrom').value;
+                    const to = document.getElementById('statTo').value;
+                    fetchStatistics(from, to);
+                }
+            });
+        });
+
+        // ---- Init ----
+        fetchTasks();
+        fetchUsers();
+        fetchStatistics();
+    })();
+</script>
+</body>
+</html>
