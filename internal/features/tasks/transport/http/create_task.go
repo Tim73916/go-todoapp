@@ -11,14 +11,26 @@ import (
 	core_http_response "github.com/Tim73916/go-todoapp/internal/core/transport/http/response"
 )
 
-type CreateTaskResponse TaskDTOResponse
-
 type CreateTaskRequest struct {
-	Title        string  `json:"title" validate:"required,min=1,max=100"`
-	Description  *string `json:"description" validate:"omitempty,min=1,max=1000"`
-	AuthorUserID int     `json:"author_user_id" validate:"required"`
+	Title        string  `json:"title" validate:"required,min=1,max=100" example:"Homework"`
+	Description  *string `json:"description" validate:"omitempty,min=1,max=1000"  example:"Make  my homework until Friday"`
+	AuthorUserID int     `json:"author_user_id" validate:"required" example:"5"`
 }
 
+type CreateTaskResponse TaskDTOResponse
+
+// CreateTask godoc
+// @Summary Create task
+// @Description Create a new task in the system
+// @Tags tasks
+// @Accept json
+// @Produce json
+// @Param request body CreateTaskRequest true "Create task request body"
+// @Success 201 {object} CreateTaskResponse "Task successfully created"
+// @Failure 400 {object} core_http_response.ErrorResponse "Bad request"
+// @Failure 404 {object} core_http_response.ErrorResponse "Author not found"
+// @Failure 500 {object} core_http_response.ErrorResponse "Internal server error"
+// @Router /tasks [post]
 func (h *TasksHTTPHandler) CreateTask(rw http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	log := core_logger.FromContext(ctx)

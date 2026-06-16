@@ -1,0 +1,644 @@
+basePath: /api/v1
+definitions:
+  github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse:
+    properties:
+      error:
+        example: full error text
+        type: string
+      message:
+        example: short human-readable message
+        type: string
+    type: object
+  github_com_Tim73916_go-todoapp_internal_core_transport_http_types.Nullable-bool:
+    properties:
+      set:
+        type: boolean
+      value:
+        type: boolean
+    type: object
+  github_com_Tim73916_go-todoapp_internal_core_transport_http_types.Nullable-string:
+    properties:
+      set:
+        type: boolean
+      value:
+        type: string
+    type: object
+  internal_features_statistics_transport_http.GetStatisticsResponse:
+    properties:
+      tasks_average_completion_time:
+        example: 12m45s
+        type: string
+      tasks_completed:
+        example: 13
+        type: integer
+      tasks_completeed_rate:
+        example: 67
+        type: number
+      tasks_created:
+        example: 50
+        type: integer
+    type: object
+  internal_features_tasks_transport_http.CreateTaskRequest:
+    properties:
+      author_user_id:
+        example: 5
+        type: integer
+      description:
+        example: Make  my homework until Friday
+        maxLength: 1000
+        minLength: 1
+        type: string
+      title:
+        example: Homework
+        maxLength: 100
+        minLength: 1
+        type: string
+    required:
+    - author_user_id
+    - title
+    type: object
+  internal_features_tasks_transport_http.CreateTaskResponse:
+    properties:
+      author_user_id:
+        example: 5
+        type: integer
+      completed:
+        example: false
+        type: boolean
+      completed_at:
+        example: "null"
+        type: string
+      created_at:
+        example: "2026-01-24T12:28:00Z"
+        type: string
+      description:
+        example: Make mathematics homework until Friday
+        type: string
+      id:
+        example: 15
+        type: integer
+      title:
+        example: Homework
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_tasks_transport_http.GetTaskResponse:
+    properties:
+      author_user_id:
+        example: 5
+        type: integer
+      completed:
+        example: false
+        type: boolean
+      completed_at:
+        example: "null"
+        type: string
+      created_at:
+        example: "2026-01-24T12:28:00Z"
+        type: string
+      description:
+        example: Make mathematics homework until Friday
+        type: string
+      id:
+        example: 15
+        type: integer
+      title:
+        example: Homework
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_tasks_transport_http.PatchTaskRequest:
+    properties:
+      completed:
+        $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_types.Nullable-bool'
+      description:
+        $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_types.Nullable-string'
+      title:
+        $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_types.Nullable-string'
+    type: object
+  internal_features_tasks_transport_http.PatchUserResponse:
+    properties:
+      author_user_id:
+        example: 5
+        type: integer
+      completed:
+        example: false
+        type: boolean
+      completed_at:
+        example: "null"
+        type: string
+      created_at:
+        example: "2026-01-24T12:28:00Z"
+        type: string
+      description:
+        example: Make mathematics homework until Friday
+        type: string
+      id:
+        example: 15
+        type: integer
+      title:
+        example: Homework
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_tasks_transport_http.TaskDTOResponse:
+    properties:
+      author_user_id:
+        example: 5
+        type: integer
+      completed:
+        example: false
+        type: boolean
+      completed_at:
+        example: "null"
+        type: string
+      created_at:
+        example: "2026-01-24T12:28:00Z"
+        type: string
+      description:
+        example: Make mathematics homework until Friday
+        type: string
+      id:
+        example: 15
+        type: integer
+      title:
+        example: Homework
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_users_transport_http.CreateUserRequest:
+    properties:
+      full_name:
+        example: Brandy Werson
+        maxLength: 50
+        minLength: 3
+        type: string
+      phone_number:
+        example: "+131349581245"
+        maxLength: 15
+        minLength: 10
+        type: string
+    required:
+    - full_name
+    type: object
+  internal_features_users_transport_http.CreateUserResponse:
+    properties:
+      full_name:
+        example: Brandy Werson
+        type: string
+      id:
+        example: 10
+        type: integer
+      phone_number:
+        example: "+131349581245"
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_users_transport_http.GetUserResponse:
+    properties:
+      full_name:
+        example: Brandy Werson
+        type: string
+      id:
+        example: 10
+        type: integer
+      phone_number:
+        example: "+131349581245"
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_users_transport_http.PatchUserRequest:
+    properties:
+      full_name:
+        example: Brandy Werson
+        type: string
+      phone_number:
+        example: "+131349581245"
+        type: string
+    type: object
+  internal_features_users_transport_http.PatchUserResponse:
+    properties:
+      full_name:
+        example: Brandy Werson
+        type: string
+      id:
+        example: 10
+        type: integer
+      phone_number:
+        example: "+131349581245"
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+  internal_features_users_transport_http.UserDTOResponse:
+    properties:
+      full_name:
+        example: Brandy Werson
+        type: string
+      id:
+        example: 10
+        type: integer
+      phone_number:
+        example: "+131349581245"
+        type: string
+      version:
+        example: 3
+        type: integer
+    type: object
+host: 127.0.0.1:5050
+info:
+  contact: {}
+  description: Todo Application REST-API scheme
+  title: Golang Todo API
+  version: "1.0"
+paths:
+  /statistics:
+    get:
+      description: Get task statistics with optional filtering by user_id and/or time
+        range
+      parameters:
+      - description: Filter statistics by specific user
+        in: query
+        name: user_id
+        type: integer
+      - description: 'Start of the statistics period (inclusive), format: YYYY-MM-DD'
+        in: query
+        name: from
+        type: string
+      - description: 'End of the statistics period (exclusive), format: YYYY-MM-DD'
+        in: query
+        name: to
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Statistics successfully retrieved
+          schema:
+            $ref: '#/definitions/internal_features_statistics_transport_http.GetStatisticsResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Get statistics
+      tags:
+      - statistics
+  /tasks:
+    get:
+      description: Get a list of tasks with optional pagination and/or filtering by
+        author ID
+      parameters:
+      - description: Filter tasks by author ID
+        in: query
+        name: user_id
+        type: integer
+      - description: Page size for tasks
+        in: query
+        name: limit
+        type: integer
+      - description: Page offset for tasks
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Tasks list successfully retrieved
+          schema:
+            items:
+              $ref: '#/definitions/internal_features_tasks_transport_http.TaskDTOResponse'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Get tasks list
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Create a new task in the system
+      parameters:
+      - description: Create task request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_features_tasks_transport_http.CreateTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Task successfully created
+          schema:
+            $ref: '#/definitions/internal_features_tasks_transport_http.CreateTaskResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: Author not found
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Create task
+      tags:
+      - tasks
+  /tasks/{id}:
+    delete:
+      description: Delete an existing task in the system by ID
+      parameters:
+      - description: ID of the task to delete
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: Task successfully deleted
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Delete task
+      tags:
+      - tasks
+    get:
+      description: Get a specific task by ID
+      parameters:
+      - description: ID of the task to retrieve
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task successfully found
+          schema:
+            $ref: '#/definitions/internal_features_tasks_transport_http.GetTaskResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Get task
+      tags:
+      - tasks
+    patch:
+      consumes:
+      - application/json
+      description: |-
+        Update information of an existing task in the system
+        ### Field update logic (Three-state logic):
+        1. *Field not provided*: `description` is ignored, database value does not change
+        2. *Value explicitly provided*: `"description": "Buy milk and bread at the store"` – sets new description in DB
+        3. *Null explicitly provided*: `"description": null` – clears the field in DB (sets to NULL)
+        Restrictions: `title` and `completed` cannot be set to null
+      parameters:
+      - description: ID of the task to update
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Patch task request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_features_tasks_transport_http.PatchTaskRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task successfully updated
+          schema:
+            $ref: '#/definitions/internal_features_tasks_transport_http.PatchUserResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: Task not found
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Update task
+      tags:
+      - tasks
+  /users:
+    get:
+      description: Get a list of users with optional pagination
+      parameters:
+      - description: Page size for users
+        in: query
+        name: limit
+        type: integer
+      - description: Page offset for users
+        in: query
+        name: offset
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Users list successfully retrieved
+          schema:
+            items:
+              $ref: '#/definitions/internal_features_users_transport_http.UserDTOResponse'
+            type: array
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Get users list
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create a new user in the system
+      parameters:
+      - description: CreateUser requset body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_features_users_transport_http.CreateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Successfully created user
+          schema:
+            $ref: '#/definitions/internal_features_users_transport_http.CreateUserResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Create a user
+      tags:
+      - users
+  /users/{id}:
+    delete:
+      description: Delete an existing user in the system by ID
+      parameters:
+      - description: ID of the user to delete
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: User successfully deleted
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Delete user
+      tags:
+      - users
+    get:
+      description: Get a specific user by ID
+      parameters:
+      - description: ID of the user to retrieve
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User successfully found
+          schema:
+            $ref: '#/definitions/internal_features_users_transport_http.GetUserResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Get user
+      tags:
+      - users
+    patch:
+      consumes:
+      - application/json
+      description: |-
+        Update information of an existing user in the system
+        ### Field update logic (Three-state logic):
+        1. *Field not provided*: `phone_number` is ignored, database value does not change
+        2. *Value explicitly provided*: `"phone_number": "+711122233344"` – sets new phone number in DB
+        3. *Null explicitly provided*: `"phone_number": null` – clears the field in DB (sets to NULL)
+        Restrictions: `full_name` cannot be set to null
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Patch user request body
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/internal_features_users_transport_http.PatchUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User successfully updated
+          schema:
+            $ref: '#/definitions/internal_features_users_transport_http.PatchUserResponse'
+        "400":
+          description: Bad request
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "404":
+          description: User not found
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "409":
+          description: Conflict
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/github_com_Tim73916_go-todoapp_internal_core_transport_http_response.ErrorResponse'
+      summary: Update user
+      tags:
+      - users
+swagger: "2.0"
